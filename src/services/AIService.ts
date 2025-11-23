@@ -1,4 +1,3 @@
-// AIServices.ts
 /**
  * Serviço unificado de IA para o plugin do Acode
  * Suporta múltiplos provedores (OpenAI, Gemini, DeepSeek)
