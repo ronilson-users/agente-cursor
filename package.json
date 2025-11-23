@@ -9,7 +9,8 @@
   "scripts": {
     "dev": "node esbuild.config.mjs --watch",
     "serve": "node esbuild.config.mjs --serve",
-    "build": "node esbuild.config.mjs"
+    "build": "node esbuild.config.mjs",
+    "commit": "cz"
   },
   "dependencies": {
     "@types/ace": "^0.0.50",
@@ -17,11 +18,21 @@
     "typescript": "^5.9.3"
   },
   "devDependencies": {
+    "commitizen": "^4.3.1",
+    "cz-customizable": "^7.5.1",
     "esbuild": "^0.25.2",
     "esbuild-sass-plugin": "^3.3.1",
     "jszip": "^3.10.1",
     "prettier": "3.0.0",
     "sass": "^1.93.3"
   },
-  "browserslist": "cover 100%,not android < 5"
+  "browserslist": "cover 100%,not android < 5",
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-customizable"
+    },
+    "cz-customizable": {
+      "config": "cz-config.js"
+    }
+  }
 }
