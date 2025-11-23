@@ -1,0 +1,396 @@
+// ------------------------------------
+// 1. _variables (Ajustado para Grayscapes)
+// ------------------------------------
+
+$primary-color: #2e2e2f;
+$secondary-color: #4b5563;
+$success-color: #10b981;
+$error-color: #ef4444;
+
+// Tons de Cinza para o Tema Base - NOMES CORRIGIDOS
+$gray-50: #f9fafb;
+$gray-100: #f3f4f6;
+$gray-200: #e5e7eb;
+$gray-300: #d1d5db;
+$gray-400: #9ca3af;
+$gray-500: #6b7280;
+$gray-600: #4b5563;
+$gray-700: #374151;
+$gray-800: #1f2937;
+$gray-900: #282d37;
+
+$border-radius: 4px;
+
+// Espaçamento e Fontes 
+$spacing-xxs: 4px;
+$spacing-xs: 8px;
+$spacing-sm: 12px;
+$spacing-md: 16px;
+$spacing-lg: 20px;
+
+$font-size-xs: 12px;
+$font-size-sm: 14px;
+$font-size-base: 16px;
+
+// ------------------------------------
+// 2. Sidebar Container 
+// ------------------------------------
+
+.sidebar-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh; 
+  max-height: 100vh;
+  background: $gray-100;
+  color: $gray-700;
+  font-size: $font-size-sm;
+  line-height: 1.5;
+  overflow: hidden; 
+  
+  // Cabeçalho com abas
+  .flex.border-b {
+    display: flex;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: white;
+    border-bottom: 1px solid $gray-200;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    flex-shrink: 0; // Não encolher
+    
+    .tab-btn {
+      flex: 1;
+      padding: $spacing-sm $spacing-xs;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      font-size: $font-size-sm;
+      color: $gray-500;
+      transition: all 0.2s ease;
+      border-bottom: 3px solid transparent;
+      font-weight: 500;
+      
+      &.active {
+        color: $primary-color;
+        font-weight: 600;
+        border-bottom-color: $primary-color;
+        background: $gray-50;
+      }
+      
+      &:hover:not(.active) {
+        background: $gray-50;
+        color: $gray-700;
+      }
+      
+      &:active {
+        transform: translateY(1px);
+      }
+    }
+  }
+  
+  // CONTEÚDO PRINCIPAL - ÚNICO PONTO DE SCROLL
+  .tab-content-main {
+    flex: 1;
+    overflow-y: auto; // SCROLL APENAS AQUI
+    -webkit-overflow-scrolling: touch; // CRÍTICO para iOS
+    overflow-x: hidden;
+    height: 100%;
+    
+    .tab-pane {
+      display: none;
+      padding: 0;
+      animation: fadeIn 0.25s ease;
+      min-height: 100%; // Garantir altura mínima
+      
+      &.active {
+        display: block;
+      }
+      
+      // REMOVER overflow-y dos panes individuais
+      // O scroll agora é controlado pelo container principal
+    }
+  }
+}
+
+// ------------------------------------
+// 3. Componentes Internos
+// ------------------------------------
+
+// Botões
+.btn {
+  display: block;
+  padding: $spacing-sm $spacing-md;
+  border: none;
+  border-radius: $border-radius;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: $font-size-sm;
+  transition: all 0.2s ease;
+  text-align: center;
+  text-decoration: none;
+  -webkit-tap-highlight-color: transparent; // Melhorar touch no mobile
+  
+  &.primary {
+    background: $primary-color;
+    color: white;
+    
+    &:hover:not(:disabled) {
+      background: darken($primary-color, 10%);
+      transform: translateY(-1px);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    
+    &:active:not(:disabled) {
+      transform: translateY(0);
+    }
+  }
+ 
+ &.secondary {
+  background: $secondary-color;
+  color: white;
+  
+  &:hover:not(:disabled) {
+   background: darken($secondary-color, 10%);
+   transform: translateY(-1px);
+  }
+  
+  &:active:not(:disabled) {
+   transform: translateY(0);
+  }
+ }
+ 
+ &:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none !important;
+ }
+ 
+ // Tamanhos
+ &.py-1 {
+  padding-top: $spacing-xs;
+  padding-bottom: $spacing-xs;
+ }
+ 
+ &.py-2 {
+  padding-top: $spacing-sm;
+  padding-bottom: $spacing-sm;
+ }
+}
+
+// Campos de formulário
+input,
+select,
+textarea {
+ width: 100%;
+ padding: $spacing-sm;
+ border: 1px solid $gray-300;
+ border-radius: $border-radius;
+ font-size: $font-size-sm;
+ background: white;
+ transition: all 0.2s ease;
+ 
+ &:focus {
+  outline: none;
+  border-color: $primary-color;
+  box-shadow: 0 0 0 3px rgba($primary-color, 0.1);
+ }
+ 
+ &::placeholder {
+  color: $gray-400;
+ }
+}
+
+// Terminal Output
+.terminal-output {
+  background: $gray-900;
+  color: #10b981;
+  padding: $spacing-md;
+  border-radius: $border-radius;
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  font-size: $font-size-xs;
+  line-height: 1.4;
+  white-space: pre-wrap;
+  word-break: break-all;
+  max-height: 160px; // Reduzir um pouco para mobile
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  
+  // Cores (mantido igual)
+  .text-success { color: $success-color; }
+  .text-yellow-400 { color: #fbbf24; }
+  .text-red-400 { color: $error-color; }
+  .text-blue-400 { color: #60a5fa; }
+  .text-gray-400 { color: $gray-400; }
+  .text-gray-500 { color: $gray-500; }
+}
+
+// Status e indicadores
+.text-success {
+ color: $success-color;
+}
+
+.text-error {
+ color: $error-color;
+}
+
+// ------------------------------------
+// 4. Animações
+// ------------------------------------
+
+@keyframes fadeIn {
+ from {
+  opacity: 0;
+  transform: translateY(5px);
+ }
+ 
+ to {
+  opacity: 1;
+  transform: translateY(0);
+ }
+}
+
+// ------------------------------------
+// 5. Modo Escuro
+// ------------------------------------
+
+@media (prefers-color-scheme: dark) {
+ .sidebar-container {
+  background: $gray-900;
+  color: $gray-200;
+  
+  .flex.border-b {
+   background: $gray-800;
+   border-bottom-color: $gray-700;
+   
+   .tab-btn {
+    color: $gray-400;
+    
+    &.active {
+     color: $primary-color;
+     background: $gray-800;
+    }
+    
+    &:hover:not(.active) {
+     background: $gray-700;
+     color: $gray-200;
+    }
+   }
+  }
+  
+  input,
+  select,
+  textarea {
+   background: $gray-800;
+   border-color: $gray-600;
+   color: $gray-200;
+   
+   &:focus {
+    border-color: $primary-color;
+    box-shadow: 0 0 0 3px rgba($primary-color, 0.2);
+   }
+   
+   &::placeholder {
+    color: $gray-500;
+   }
+  }
+  
+  .terminal-output {
+   background: #0d1117;
+   color: #10b981;
+  }
+  
+  .border {
+   border-color: $gray-600;
+  }
+  
+  .bg-white {
+   background: $gray-800 !important;
+  }
+  
+  .bg-gray-900 {
+   background: $gray-900 !important;
+  }
+ }
+}
+
+
+
+// ------------------------------------
+// 7. Utilitários Responsivos
+// ------------------------------------
+
+@media (max-width: 768px) {
+ .sidebar-container {
+  .flex.border-b .tab-btn {
+   padding: $spacing-xs $spacing-xxs;
+   font-size: $font-size-xs;
+  }
+  
+  .tab-content .tab-pane .p-2 {
+   padding: $spacing-sm;
+  }
+ }
+}
+
+// ------------------------------------
+// 8. Estados de Loading e Disabled
+// ------------------------------------
+
+.loading {
+ opacity: 0.7;
+ pointer-events: none;
+ position: relative;
+ 
+ &::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 16px;
+  height: 16px;
+  margin: -8px 0 0 -8px;
+  border: 2px solid transparent;
+  border-top: 2px solid $primary-color;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+ }
+}
+
+@keyframes spin {
+ 0% {
+  transform: rotate(0deg);
+ }
+ 
+ 100% {
+  transform: rotate(360deg);
+ }
+}
+
+
+// ------------------------------------
+// 9. CORREÇÕES ESPECÍFICAS PARA TOUCH
+// ------------------------------------
+
+// Melhorar performance no scroll touch
+.tab-content-main {
+  transform: translateZ(0); // Acelerar hardware
+  backface-visibility: hidden;
+  perspective: 1000;
+}
+
+// Prevenir zoom no double-tap (iOS)
+.sidebar-container {
+  touch-action: pan-y; // Só permite scroll vertical
+}
+
+// Melhorar toque em botões e inputs
+.btn, input, select, textarea {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation; // Melhor resposta ao toque
+}
+
+// Garantir que conteúdo tenha altura suficiente para scroll
+.tab-pane > div {
+  min-height: calc(100vh - 120px); // Altura mínima baseada na viewport
+}
+
