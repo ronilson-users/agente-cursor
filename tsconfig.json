@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "NodeNext",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "allowJs": true,
+    "declaration": true,
+    "emitDeclarationOnly": false,
+    "outDir": "dist",
+    "baseUrl": "./src",
+    "paths": {
+      "@/*": ["*"],
+      "@typings/*": ["typings/*"]
+   },
+    "types": ["@types/ace"]
+  },
+  "include": ["src/**/*", "typings/**/*.d.ts"],
+  "exclude": ["node_modules", "dist"]
+}
+

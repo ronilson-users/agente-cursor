@@ -1,0 +1,49 @@
+{
+ "id": "rsjRonilson.IA.Agente",
+ "name": "testar",
+ "main": "main.ts",
+ "version": "1.0.0",
+ "readme": "readme.md",
+ "icon": "icon.png",
+ "files": [
+  "styles/main.scss",
+  "assets/icon.png",
+  "src/main.ts"
+  ],
+ "minVersionCode": 290,
+ "license": "MIT",
+ "changelogs": "changelogs.md",
+ "keywords": [
+  "app",
+  "acode"
+ ],
+ "permissions": [
+  "storage",
+  "internet",
+  "file-system"
+ ],
+ "supportedLanguages": [
+  "javascript",
+  "typescript",
+  "python",
+  "html",
+  "css",
+  "php",
+  "java",
+  "rust",
+  "go",
+  "sql"
+ ],
+ "aiProviders": [
+  "DeepSeek",
+  "Gemini",
+  "OpenAI"
+ ],
+ "browser": false,
+ "author": {
+  "name": "rsjRoni",
+  "email": "ronilson.stos@gmail.com",
+  "github": "roilson-users"
+ }
+ 
+}

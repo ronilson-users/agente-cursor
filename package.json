@@ -1,0 +1,27 @@
+{
+  "name": "acode-plugin_IA-AGENT",
+  "version": "1.0.0",
+  "description": "Template for Acode plugin",
+  "main": "src/main.ts",
+  "repository": "https://github.com/Acode-Foundation/acode-plugin.git",
+  "author": "Acode Foundation",
+  "license": "MIT",
+  "scripts": {
+    "dev": "node esbuild.config.mjs --watch",
+    "serve": "node esbuild.config.mjs --serve",
+    "build": "node esbuild.config.mjs"
+  },
+  "dependencies": {
+    "@types/ace": "^0.0.50",
+    "html-tag-js": "^1.1.41",
+    "typescript": "^5.9.3"
+  },
+  "devDependencies": {
+    "esbuild": "^0.25.2",
+    "esbuild-sass-plugin": "^3.3.1",
+    "jszip": "^3.10.1",
+    "prettier": "3.0.0",
+    "sass": "^1.93.3"
+  },
+  "browserslist": "cover 100%,not android < 5"
+}

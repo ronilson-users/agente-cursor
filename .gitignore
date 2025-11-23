@@ -1,0 +1,21 @@
+# Arquivos sensíveis
+.env
+.env.local
+.env.*
+*.key
+*.pem
+
+# Dados sensíveis
+**/secrets/
+**/config/
+**/credentials*
+
+# Logs e temporários
+*.log
+node_modules/
+__pycache__/
+*.pyc
+
+# Sistema
+.DS_Store
+Thumbs.db
