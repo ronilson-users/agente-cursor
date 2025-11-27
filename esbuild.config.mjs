@@ -2,7 +2,7 @@ import * as esbuild from "esbuild";
 import { exec } from "child_process";
 import fs from "fs";
 import path from "path";
-import { sassPlugin } from 'esbuild-sass-plugin';
+import { sassPlugin } from "esbuild-sass-plugin";
 
 const isServe = process.argv.includes("--serve");
 const isWatch = process.argv.includes("--watch");
@@ -10,11 +10,7 @@ const isProd = !isServe && !isWatch;
 
 const outdir = "dist";
 const entryFile = "src/main.ts";
-const distZip = "dist.zip";
 
-// -------------------------------------------------
-// 🧩 1. Empacotamento automático (gera dist.zip após cada build)
-// -------------------------------------------------
 function packZip() {
   const zipScript = path.resolve(".acode/pack-zip.js");
   if (!fs.existsSync(zipScript)) {
@@ -31,9 +27,6 @@ function packZip() {
   });
 }
 
-// ---------------------------------------
-// 🧱 2. Plugin personalizado do esbuild
-// ---------------------------------------
 const zipPlugin = {
   name: "zip-plugin",
   setup(build) {
@@ -48,63 +41,33 @@ const zipPlugin = {
   },
 };
 
-// --------------------------------------------
-// ⚙️ 3. Configuração base do esbuild
-// --------------------------------------------
 const buildConfig = {
   entryPoints: [entryFile],
   bundle: true,
-  minify: isProd,
-  platform: "browser",
-  format: "esm",
-  target: ["esnext"],
-  sourcemap: !isProd,
-  outdir,
+  minify: !isServe,
   logLevel: "info",
   color: true,
-  loader: {
-    ".ts": "ts",
-    ".js": "js",
-    ".json": "json",
-    ".png": "file",
-    ".jpg": "file",
-    ".jpeg": "file",
-    ".gif": "file",
-    ".svg": "file"
-  },
-  plugins: [
-    zipPlugin,
-    sassPlugin({
-      // Configurações do SCSS
-      loadPaths: ['src/styles', 'src'],
-      sourceMap: !isProd,
-      style: isProd ? 'compressed' : 'expanded',
-      // Importante: garantir que o CSS seja injetado no bundle
-      type: 'style',
-      cssImports: true
-    })
-  ],
+  outdir: "dist",
+  plugins: [zipPlugin, sassPlugin()],
   banner: {
     js: `/* 🧩 Acode Plugin Build - ${new Date().toISOString()} */`,
   },
-  // Adicionar esta configuração para garantir que arquivos estáticos sejam copiados
-  assetNames: 'assets/[name]-[hash]'
+  assetNames: 'assets/[name]-[hash]',
+  define: {
+    'process.env.NODE_ENV': JSON.stringify(isProd ? 'production' : 'development'),
+    'global': 'globalThis'
+  },
+ 
 };
 
-// -------------------------------------------------------------
-// 🚀 4. Execução do build e watch/serve modes
-// -------------------------------------------------------------
 (async () => {
   try {
     if (isServe || isWatch) {
       console.log("🚧 Iniciando build em modo desenvolvimento...");
-
       const ctx = await esbuild.context(buildConfig);
       await ctx.watch();
-
       if (isServe) {
         console.log("🌐 Servidor local ativo em http://localhost:3000");
-        console.log("⚠️ Reload automático não disponível no Termux.");
       }
     } else {
       console.log("🏗️ Build de produção em andamento...");
