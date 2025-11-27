@@ -1,595 +1,173 @@
-/* 🧩 Acode Plugin Build - 2025-11-03T02:36:46.577Z */
+/* 🧩 Acode Plugin Build - 2025-11-27T02:07:16.707Z */
+"use strict";(()=>{var u={id:"rsjRonilson.propelling-ia",name:"Propelling IA",main:"main.ts",version:"1.0.0",readme:"readme.md",icon:"icon.png",files:["styles/main.scss","assets/icon.png","src/main.ts"],minVersionCode:290,license:"MIT",changelogs:"changelogs.md",keywords:["app","acode"],permissions:["storage","internet","file-system"],supportedLanguages:["javascript","typescript","python","html","css","php","java","rust","go","sql"],aiProviders:["DeepSeek","Gemini","OpenAI"],browser:!1,author:{name:"rsjRoni",email:"ronilson.stos@gmail.com",github:"roilson-users"}};var E=class{config;apiUrl;constructor(e){this.config=e,this.apiUrl=this.getApiUrl()}getApiUrl(){let{provider:e,model:t}=this.config;switch(e){case"gemini":return`
+        
+       
+        https://generativelanguage.googleapis.com/v1beta/models/${t}/key=${apiKey}
+        
+        
+        
+        
+        `;case"deepseek":return"https://api.deepseek.com/v1/chat/completions";case"claude":return"https://api.anthropic.com/v1/messages";default:return"https://api.openai.com/v1/chat/completions"}}async sendMessage(e){let{apiKey:t,provider:r}=this.config;if(!t?.trim())throw new Error("Chave de API n\xE3o configurada.");if(!e?.trim())throw new Error("Mensagem vazia.");console.log(`Enviando mensagem para ${r}...`);try{switch(r){case"gemini":return await this.sendGemini(e);case"claude":return await this.sendClaude(e);case"deepseek":case"openai":default:return await this.sendOpenAI(e)}}catch(o){throw console.error(`Erro no AIService (${r}):`,o),o}}async sendOpenAI(e){let{apiKey:t,model:r,temperature:o=.7}=this.config,n={model:r,messages:[{role:"system",content:"Voc\xEA \xE9 um assistente de programa\xE7\xE3o \xFAtil e conciso. Responda em portugu\xEAs."},{role:"user",content:e}],temperature:o,max_tokens:4e3};console.log(`Enviando para OpenAI/DeepSeek - Modelo: ${r}`);let a=await fetch(this.apiUrl,{method:"POST",headers:{"Content-Type":"application/json",Authorization:`Bearer ${t}`},body:JSON.stringify(n)});if(!a.ok){let s=await a.text();throw console.error(`Erro ${a.status}:`,s),new Error(`Erro ${a.status}: ${this.extractErrorMessage(s)}`)}return(await a.json()).choices?.[0]?.message?.content?.trim()||"Sem resposta da API."}async sendGemini(e){let{apiKey:t,model:r,temperature:o=.7}=this.config,n={contents:[{parts:[{text:e}]}],generationConfig:{temperature:o,maxOutputTokens:4e3}},a=`${this.apiUrl}?key=${t}`;console.log(`Enviando para Gemini - Modelo: ${r}`);let i=await fetch(a,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(n)});if(!i.ok){let d=await i.text();throw console.error(`Erro ${i.status}:`,d),new Error(`Erro ${i.status}: ${this.extractErrorMessage(d)}`)}let s=await i.json(),m=s.candidates?.[0]?.content?.parts?.[0]?.text;if(!m)throw console.error("Resposta vazia do Gemini:",s),new Error("Resposta vazia do Gemini");return m}async sendClaude(e){let{apiKey:t,model:r,temperature:o=.7}=this.config,n={model:r,max_tokens:4e3,temperature:o,messages:[{role:"user",content:e}]};console.log(`Enviando para Claude - Modelo: ${r}`);let a=await fetch(this.apiUrl,{method:"POST",headers:{"Content-Type":"application/json","x-api-key":t,"anthropic-version":"2023-06-01"},body:JSON.stringify(n)});if(!a.ok){let s=await a.text();throw console.error(`Erro ${a.status}:`,s),new Error(`Erro ${a.status}: ${this.extractErrorMessage(s)}`)}return(await a.json()).content?.[0]?.text?.trim()||"Sem resposta do Claude."}extractErrorMessage(e){try{let t=JSON.parse(e);return t.error?.message||t.error||e}catch{return e}}async testConnection(){try{return(await this.sendMessage("Responda apenas com 'OK' se estiver funcionando.")).includes("OK")}catch(e){return console.error("Teste de conex\xE3o falhou:",e),!1}}};var I=acode.require("settings"),w=class{defaultRules={alwaysUseMarkdown:!0,avoidRepeatingUserMessage:!0,avoidHallucinations:!0,verifyBeforeAnswering:!0,useFriendlyTone:!0};toggleRules={preferTypescript:!1,preferCleanCode:!0,explainLikeTeacher:!1,simpleLanguage:!1,showAlternativeSolutions:!1,optimizePerformance:!1,autoDetectLanguage:!0};customRules={};constructor(){this.loadSavedRules()}loadSavedRules(){let e=I.value[u.id];if(!e||!e.rules)return;let t=e.rules;this.toggleRules=t.toggleRules||this.toggleRules,this.customRules=t.customRules||this.customRules}save(){let e=I.value[u.id];e&&(e.rules={defaultRules:this.defaultRules,toggleRules:this.toggleRules,customRules:this.customRules},I.update())}setToggleRule(e,t){this.toggleRules[e]=t,this.save()}setCustomRules(e){this.customRules=e,this.save()}getRules(){return{...this.defaultRules,...this.toggleRules,...this.customRules}}getRulesAsText(){let e=this.getRules();return Object.entries(e).filter(([t,r])=>r!==!1).map(([t,r])=>typeof r=="boolean"?`- ${t}`:`- ${t}: ${r}`).join(`
+`)}countActiveRules(){let e=this.getRules();return Object.values(e).filter(t=>t!==!1).length}reset(){this.toggleRules={preferTypescript:!1,preferCleanCode:!0,explainLikeTeacher:!1,simpleLanguage:!1,showAlternativeSolutions:!1,optimizePerformance:!1,autoDetectLanguage:!0},this.customRules={},this.save()}};var v=class{static async copyToClipboard(e){if(!e)return!1;try{if(navigator.clipboard&&navigator.clipboard.writeText)return await navigator.clipboard.writeText(e),!0}catch{}try{let t=document.createElement("textarea");t.value=e,t.style.position="fixed",t.style.left="-9999px",document.body.appendChild(t),t.select(),t.setSelectionRange(0,t.value.length);let r=document.execCommand("copy");return document.body.removeChild(t),!!r}catch(t){return console.error("Fallback copy failed:",t),!1}}static async loadHighlight(e){let t=o=>new Promise((n,a)=>{if(document.querySelector(`script[src="${o}"]`))return n();let i=document.createElement("script");i.src=o,i.onload=()=>n(),i.onerror=()=>a(new Error("Failed to load script "+o)),document.head.appendChild(i)}),r=o=>{if(document.querySelector(`link[href="${o}"]`))return;let n=document.createElement("link");n.rel="stylesheet",n.href=o,document.head.appendChild(n)};try{e||(e=""),r(`${e}assets/highlight-light.min.css`),await t(`${e}assets/highlight.min.js`);let o=window.hljs;return o&&typeof o.highlightAll=="function"&&(o.configure&&o.configure({ignoreUnescapedHTML:!0}),o.highlightAll()),!0}catch(o){return console.warn("N\xE3o foi poss\xEDvel carregar highlight.js:",o),!1}}};var S=class{cryptoKey=null;encoder=new TextEncoder;decoder=new TextDecoder;async encrypt(e){if(!e)return"";let t=await this.loadCryptoKey(),r=crypto.getRandomValues(new Uint8Array(12)),o=this.encoder.encode(e),n=await crypto.subtle.encrypt({name:"AES-GCM",iv:r},t,o),a=new Uint8Array(n),i=new Uint8Array(r.length+a.length);i.set(r),i.set(a,r.length);let s="";for(let m=0;m<i.length;m++)s+=String.fromCharCode(i[m]);return btoa(s)}async decrypt(e){if(!e)return"";try{let t=await this.loadCryptoKey(),r=atob(e),o=new Uint8Array(r.length);for(let s=0;s<r.length;s++)o[s]=r.charCodeAt(s);let n=o.slice(0,12),a=o.slice(12),i=await crypto.subtle.decrypt({name:"AES-GCM",iv:n},t,a);return this.decoder.decode(i)}catch(t){return console.error("Erro ao descriptografar:",t),""}}async loadCryptoKey(){if(this.cryptoKey)return this.cryptoKey;let e="agenteIA.secretKey",t=localStorage.getItem(e);if(!t){let n=this.randomBytes(32),a=String.fromCharCode(...n),i=btoa(a);localStorage.setItem(e,i),t=i}let r=atob(t),o=new Uint8Array(r.length);for(let n=0;n<r.length;n++)o[n]=r.charCodeAt(n);return this.cryptoKey=await crypto.subtle.importKey("raw",o,{name:"AES-GCM",length:256},!1,["encrypt","decrypt"]),this.cryptoKey}randomBytes(e){let t=new Uint8Array(e);return crypto.getRandomValues(t),t}};var l=class{static escapeHtml(e){let t=document.createElement("div");return t.textContent=e,t.innerHTML}static autoResizeTextarea(e){e.style.height="auto",e.style.height=Math.min(e.scrollHeight,320)+"px"}static createElement(e,t={},r=[]){let o=document.createElement(e);return Object.entries(t).forEach(([n,a])=>{o.setAttribute(n,a)}),r.forEach(n=>{typeof n=="string"?o.appendChild(document.createTextNode(n)):o.appendChild(n)}),o}static loadStylesheet(e){let t=this.createElement("link",{rel:"stylesheet",href:e});return document.head.appendChild(t),t}};var T=class{static render(e){return`
+      <div class="chat-container">
+        <div class="chat-top-bar">
+          <button id="clear-chat" class="top-btn danger icon delete"></button>
+          <button id="history-chat" class="top-btn icon tune"> </button>
+        </div>
 
-// plugin.json
-var plugin_default = {
-  id: "rsjRonilson.IA.Agente",
-  name: "testar",
-  main: "main.ts",
-  version: "1.0.0",
-  readme: "readme.md",
-  icon: "icon.png",
-  files: [
-    "styles/main.scss",
-    "assets/icon.png",
-    "src/main.ts",
-    "src/api/deepseek.js",
-    "src/api/multiAIOrchestrator.js",
-    "src/features/codeGenerator.js",
-    "src/features/codeCorrector.js",
-    "src/features/projectCreator.js",
-    "src/features/codeSuggester.js",
-    "src/features/nextJSSpecialist.js",
-    "src/features/contextAnalyzer.js",
-    "src/ui/sidebar.js",
-    "src/ui/dialogs.js",
-    "src/utils/fileManager.js",
-    "src/utils/analytics.js"
-  ],
-  minVersionCode: 290,
-  license: "MIT",
-  changelogs: "changelogs.md",
-  keywords: [
-    "app",
-    "acode"
-  ],
-  permissions: [
-    "storage",
-    "internet",
-    "file-system"
-  ],
-  supportedLanguages: [
-    "javascript",
-    "typescript",
-    "python",
-    "html",
-    "css",
-    "php",
-    "java",
-    "rust",
-    "go",
-    "sql"
-  ],
-  aiProviders: [
-    "DeepSeek",
-    "Gemini",
-    "OpenAI"
-  ],
-  browser: false,
-  author: {
-    name: "rsjRoni",
-    email: "ronilson.stos@gmail.com",
-    github: "roilson-users"
-  }
-};
-
-// src/styles/main.scss
-var css = `.sidebar-container {
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
-  max-height: 100vh;
-  background: #f3f4f6;
-  color: #374151;
-  font-size: 14px;
-  line-height: 1.5;
-  overflow: hidden;
-}
-.sidebar-container .flex.border-b {
-  display: flex;
-  position: sticky;
-  top: 0;
-  z-index: 10;
-  background: white;
-  border-bottom: 1px solid #e5e7eb;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  flex-shrink: 0;
-}
-.sidebar-container .flex.border-b .tab-btn {
-  flex: 1;
-  padding: 12px 8px;
-  border: none;
-  background: transparent;
-  cursor: pointer;
-  font-size: 14px;
-  color: #6b7280;
-  transition: all 0.2s ease;
-  border-bottom: 3px solid transparent;
-  font-weight: 500;
-}
-.sidebar-container .flex.border-b .tab-btn.active {
-  color: #2e2e2f;
-  font-weight: 600;
-  border-bottom-color: #2e2e2f;
-  background: #f9fafb;
-}
-.sidebar-container .flex.border-b .tab-btn:hover:not(.active) {
-  background: #f9fafb;
-  color: #374151;
-}
-.sidebar-container .flex.border-b .tab-btn:active {
-  transform: translateY(1px);
-}
-.sidebar-container .tab-content-main {
-  flex: 1;
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
-  overflow-x: hidden;
-  height: 100%;
-}
-.sidebar-container .tab-content-main .tab-pane {
-  display: none;
-  padding: 0;
-  animation: fadeIn 0.25s ease;
-  min-height: 100%;
-}
-.sidebar-container .tab-content-main .tab-pane.active {
-  display: block;
-}
-
-.btn {
-  display: block;
-  padding: 12px 16px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-weight: 500;
-  font-size: 14px;
-  transition: all 0.2s ease;
-  text-align: center;
-  text-decoration: none;
-  -webkit-tap-highlight-color: transparent;
-}
-.btn.primary {
-  background: #2e2e2f;
-  color: white;
-}
-.btn.primary:hover:not(:disabled) {
-  background: rgb(20.7741935484, 20.7741935484, 21.2258064516);
-  transform: translateY(-1px);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-.btn.primary:active:not(:disabled) {
-  transform: translateY(0);
-}
-.btn.secondary {
-  background: #4b5563;
-  color: white;
-}
-.btn.secondary:hover:not(:disabled) {
-  background: rgb(53.0172413793, 60.0862068966, 69.9827586207);
-  transform: translateY(-1px);
-}
-.btn.secondary:active:not(:disabled) {
-  transform: translateY(0);
-}
-.btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-  transform: none !important;
-}
-.btn.py-1 {
-  padding-top: 8px;
-  padding-bottom: 8px;
-}
-.btn.py-2 {
-  padding-top: 12px;
-  padding-bottom: 12px;
-}
-
-input,
-select,
-textarea {
-  width: 100%;
-  padding: 12px;
-  border: 1px solid #d1d5db;
-  border-radius: 4px;
-  font-size: 14px;
-  background: white;
-  transition: all 0.2s ease;
-}
-input:focus,
-select:focus,
-textarea:focus {
-  outline: none;
-  border-color: #2e2e2f;
-  box-shadow: 0 0 0 3px rgba(46, 46, 47, 0.1);
-}
-input::placeholder,
-select::placeholder,
-textarea::placeholder {
-  color: #9ca3af;
-}
-
-.terminal-output {
-  background: #282d37;
-  color: #10b981;
-  padding: 16px;
-  border-radius: 4px;
-  font-family: "Monaco", "Menlo", "Ubuntu Mono", monospace;
-  font-size: 12px;
-  line-height: 1.4;
-  white-space: pre-wrap;
-  word-break: break-all;
-  max-height: 160px;
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
-}
-.terminal-output .text-success {
-  color: #10b981;
-}
-.terminal-output .text-yellow-400 {
-  color: #fbbf24;
-}
-.terminal-output .text-red-400 {
-  color: #ef4444;
-}
-.terminal-output .text-blue-400 {
-  color: #60a5fa;
-}
-.terminal-output .text-gray-400 {
-  color: #9ca3af;
-}
-.terminal-output .text-gray-500 {
-  color: #6b7280;
-}
-
-.text-success {
-  color: #10b981;
-}
-
-.text-error {
-  color: #ef4444;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(5px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-@media (prefers-color-scheme: dark) {
-  .sidebar-container {
-    background: #282d37;
-    color: #e5e7eb;
-  }
-  .sidebar-container .flex.border-b {
-    background: #1f2937;
-    border-bottom-color: #374151;
-  }
-  .sidebar-container .flex.border-b .tab-btn {
-    color: #9ca3af;
-  }
-  .sidebar-container .flex.border-b .tab-btn.active {
-    color: #2e2e2f;
-    background: #1f2937;
-  }
-  .sidebar-container .flex.border-b .tab-btn:hover:not(.active) {
-    background: #374151;
-    color: #e5e7eb;
-  }
-  .sidebar-container input,
-  .sidebar-container select,
-  .sidebar-container textarea {
-    background: #1f2937;
-    border-color: #4b5563;
-    color: #e5e7eb;
-  }
-  .sidebar-container input:focus,
-  .sidebar-container select:focus,
-  .sidebar-container textarea:focus {
-    border-color: #2e2e2f;
-    box-shadow: 0 0 0 3px rgba(46, 46, 47, 0.2);
-  }
-  .sidebar-container input::placeholder,
-  .sidebar-container select::placeholder,
-  .sidebar-container textarea::placeholder {
-    color: #6b7280;
-  }
-  .sidebar-container .terminal-output {
-    background: #0d1117;
-    color: #10b981;
-  }
-  .sidebar-container .border {
-    border-color: #4b5563;
-  }
-  .sidebar-container .bg-white {
-    background: #1f2937 !important;
-  }
-  .sidebar-container .bg-gray-900 {
-    background: #282d37 !important;
-  }
-}
-@media (max-width: 768px) {
-  .sidebar-container .flex.border-b .tab-btn {
-    padding: 8px 4px;
-    font-size: 12px;
-  }
-  .sidebar-container .tab-content .tab-pane .p-2 {
-    padding: 12px;
-  }
-}
-.loading {
-  opacity: 0.7;
-  pointer-events: none;
-  position: relative;
-}
-.loading::after {
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 16px;
-  height: 16px;
-  margin: -8px 0 0 -8px;
-  border: 2px solid transparent;
-  border-top: 2px solid #2e2e2f;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
-}
-.tab-content-main {
-  transform: translateZ(0);
-  backface-visibility: hidden;
-  perspective: 1000;
-}
-
-.sidebar-container {
-  touch-action: pan-y;
-}
-
-.btn, input, select, textarea {
-  -webkit-tap-highlight-color: transparent;
-  touch-action: manipulation;
-}
-
-.tab-pane > div {
-  min-height: calc(100vh - 120px);
-}
-/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VSb290IjoiL2RhdGEvZGF0YS9jb20udGVybXV4L2ZpbGVzL2hvbWUvQ29udGludWEvdHMtc2lkZWJhci9zcmMvc3R5bGVzIiwic291cmNlcyI6WyJtYWluLnNjc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBc0NBO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQSxZQWhDUztFQWlDVCxPQTNCUztFQTRCVCxXQWRhO0VBZWI7RUFDQTs7QUFHQTtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0EsV0FuQ1M7RUFvQ1QsT0FwREs7RUFxREw7RUFDQTtFQUNBOztBQUVBO0VBQ0UsT0FyRVE7RUFzRVI7RUFDQSxxQkF2RVE7RUF3RVIsWUFsRUU7O0FBcUVKO0VBQ0UsWUF0RUU7RUF1RUYsT0FoRUc7O0FBbUVMO0VBQ0U7O0FBTU47RUFDRTtFQUNBO0VBQ0E7RUFDQTtFQUNBOztBQUVBO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTs7O0FBY1I7RUFDRTtFQUNBO0VBQ0E7RUFDQSxlQXRHYztFQXVHZDtFQUNBO0VBQ0EsV0EvRmE7RUFnR2I7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRSxZQWpJWTtFQWtJWjs7QUFFQTtFQUNFO0VBQ0E7RUFDQTs7QUFHRjtFQUNFOztBQUlMO0VBQ0MsWUEvSWdCO0VBZ0poQjs7QUFFQTtFQUNDO0VBQ0E7O0FBR0Q7RUFDQzs7QUFJRjtFQUNDO0VBQ0E7RUFDQTs7QUFJRDtFQUNDLGFBaEpXO0VBaUpYLGdCQWpKVzs7QUFvSlo7RUFDQyxhQXBKVztFQXFKWCxnQkFySlc7OztBQTBKYjtBQUFBO0FBQUE7RUFHQztFQUNBLFNBOUpZO0VBK0paO0VBQ0EsZUFyS2U7RUFzS2YsV0E1SmM7RUE2SmQ7RUFDQTs7QUFFQTtBQUFBO0FBQUE7RUFDQztFQUNBLGNBN0xjO0VBOExkOztBQUdEO0FBQUE7QUFBQTtFQUNDLE9BeExTOzs7QUE2TFg7RUFDRSxZQXpMUztFQTBMVDtFQUNBLFNBbkxXO0VBb0xYLGVBMUxjO0VBMkxkO0VBQ0EsV0FuTGE7RUFvTGI7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBOztBQUdBO0VBQWdCLE9BcE5GOztBQXFOZDtFQUFtQjs7QUFDbkI7RUFBZ0IsT0FyTko7O0FBc05aO0VBQWlCOztBQUNqQjtFQUFpQixPQWhOUjs7QUFpTlQ7RUFBaUIsT0FoTlI7OztBQW9OWDtFQUNDLE9BOU5lOzs7QUFpT2hCO0VBQ0MsT0FqT2E7OztBQXdPZDtFQUNDO0lBQ0M7SUFDQTs7RUFHRDtJQUNDO0lBQ0E7OztBQVFGO0VBQ0M7SUFDQyxZQTlPUztJQStPVCxPQXRQUzs7RUF3UFQ7SUFDQyxZQW5QUTtJQW9QUixxQkFyUFE7O0VBdVBSO0lBQ0MsT0EzUE87O0VBNlBQO0lBQ0MsT0F4UVc7SUF5UVgsWUEzUE07O0VBOFBQO0lBQ0MsWUFoUU07SUFpUU4sT0F0UU07O0VBMlFUO0FBQUE7QUFBQTtJQUdDLFlBeFFRO0lBeVFSLGNBM1FRO0lBNFFSLE9BaFJROztFQWtSUjtBQUFBO0FBQUE7SUFDQyxjQTNSWTtJQTRSWjs7RUFHRDtBQUFBO0FBQUE7SUFDQyxPQXJSTzs7RUF5UlQ7SUFDQztJQUNBOztFQUdEO0lBQ0MsY0E5UlE7O0VBaVNUO0lBQ0M7O0VBR0Q7SUFDQzs7O0FBV0g7RUFFRTtJQUNDO0lBQ0EsV0F2U1k7O0VBMFNiO0lBQ0MsU0EvU1U7OztBQXdUYjtFQUNDO0VBQ0E7RUFDQTs7QUFFQTtFQUNDO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7OztBQUlGO0VBQ0M7SUFDQzs7RUFHRDtJQUNDOzs7QUFVRjtFQUNFO0VBQ0E7RUFDQTs7O0FBSUY7RUFDRTs7O0FBSUY7RUFDRTtFQUNBOzs7QUFJRjtFQUNFIiwic291cmNlc0NvbnRlbnQiOlsiLy8gLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tXG4vLyAxLiBfdmFyaWFibGVzIChBanVzdGFkbyBwYXJhIEdyYXlzY2FwZXMpXG4vLyAtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS1cblxuJHByaW1hcnktY29sb3I6ICMyZTJlMmY7XG4kc2Vjb25kYXJ5LWNvbG9yOiAjNGI1NTYzO1xuJHN1Y2Nlc3MtY29sb3I6ICMxMGI5ODE7XG4kZXJyb3ItY29sb3I6ICNlZjQ0NDQ7XG5cbi8vIFRvbnMgZGUgQ2luemEgcGFyYSBvIFRlbWEgQmFzZSAtIE5PTUVTIENPUlJJR0lET1NcbiRncmF5LTUwOiAjZjlmYWZiO1xuJGdyYXktMTAwOiAjZjNmNGY2O1xuJGdyYXktMjAwOiAjZTVlN2ViO1xuJGdyYXktMzAwOiAjZDFkNWRiO1xuJGdyYXktNDAwOiAjOWNhM2FmO1xuJGdyYXktNTAwOiAjNmI3MjgwO1xuJGdyYXktNjAwOiAjNGI1NTYzO1xuJGdyYXktNzAwOiAjMzc0MTUxO1xuJGdyYXktODAwOiAjMWYyOTM3O1xuJGdyYXktOTAwOiAjMjgyZDM3O1xuXG4kYm9yZGVyLXJhZGl1czogNHB4O1xuXG4vLyBFc3Bhw6dhbWVudG8gZSBGb250ZXMgXG4kc3BhY2luZy14eHM6IDRweDtcbiRzcGFjaW5nLXhzOiA4cHg7XG4kc3BhY2luZy1zbTogMTJweDtcbiRzcGFjaW5nLW1kOiAxNnB4O1xuJHNwYWNpbmctbGc6IDIwcHg7XG5cbiRmb250LXNpemUteHM6IDEycHg7XG4kZm9udC1zaXplLXNtOiAxNHB4O1xuJGZvbnQtc2l6ZS1iYXNlOiAxNnB4O1xuXG4vLyAtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS1cbi8vIDIuIFNpZGViYXIgQ29udGFpbmVyIFxuLy8gLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tXG5cbi5zaWRlYmFyLWNvbnRhaW5lciB7XG4gIGRpc3BsYXk6IGZsZXg7XG4gIGZsZXgtZGlyZWN0aW9uOiBjb2x1bW47XG4gIGhlaWdodDogMTAwdmg7IFxuICBtYXgtaGVpZ2h0OiAxMDB2aDtcbiAgYmFja2dyb3VuZDogJGdyYXktMTAwO1xuICBjb2xvcjogJGdyYXktNzAwO1xuICBmb250LXNpemU6ICRmb250LXNpemUtc207XG4gIGxpbmUtaGVpZ2h0OiAxLjU7XG4gIG92ZXJmbG93OiBoaWRkZW47IFxuICBcbiAgLy8gQ2FiZcOnYWxobyBjb20gYWJhc1xuICAuZmxleC5ib3JkZXItYiB7XG4gICAgZGlzcGxheTogZmxleDtcbiAgICBwb3NpdGlvbjogc3RpY2t5O1xuICAgIHRvcDogMDtcbiAgICB6LWluZGV4OiAxMDtcbiAgICBiYWNrZ3JvdW5kOiB3aGl0ZTtcbiAgICBib3JkZXItYm90dG9tOiAxcHggc29saWQgJGdyYXktMjAwO1xuICAgIGJveC1zaGFkb3c6IDAgMXB4IDNweCByZ2JhKDAsIDAsIDAsIDAuMSk7XG4gICAgZmxleC1zaHJpbms6IDA7IC8vIE7Do28gZW5jb2xoZXJcbiAgICBcbiAgICAudGFiLWJ0biB7XG4gICAgICBmbGV4OiAxO1xuICAgICAgcGFkZGluZzogJHNwYWNpbmctc20gJHNwYWNpbmcteHM7XG4gICAgICBib3JkZXI6IG5vbmU7XG4gICAgICBiYWNrZ3JvdW5kOiB0cmFuc3BhcmVudDtcbiAgICAgIGN1cnNvcjogcG9pbnRlcjtcbiAgICAgIGZvbnQtc2l6ZTogJGZvbnQtc2l6ZS1zbTtcbiAgICAgIGNvbG9yOiAkZ3JheS01MDA7XG4gICAgICB0cmFuc2l0aW9uOiBhbGwgMC4ycyBlYXNlO1xuICAgICAgYm9yZGVyLWJvdHRvbTogM3B4IHNvbGlkIHRyYW5zcGFyZW50O1xuICAgICAgZm9udC13ZWlnaHQ6IDUwMDtcbiAgICAgIFxuICAgICAgJi5hY3RpdmUge1xuICAgICAgICBjb2xvcjogJHByaW1hcnktY29sb3I7XG4gICAgICAgIGZvbnQtd2VpZ2h0OiA2MDA7XG4gICAgICAgIGJvcmRlci1ib3R0b20tY29sb3I6ICRwcmltYXJ5LWNvbG9yO1xuICAgICAgICBiYWNrZ3JvdW5kOiAkZ3JheS01MDtcbiAgICAgIH1cbiAgICAgIFxuICAgICAgJjpob3Zlcjpub3QoLmFjdGl2ZSkge1xuICAgICAgICBiYWNrZ3JvdW5kOiAkZ3JheS01MDtcbiAgICAgICAgY29sb3I6ICRncmF5LTcwMDtcbiAgICAgIH1cbiAgICAgIFxuICAgICAgJjphY3RpdmUge1xuICAgICAgICB0cmFuc2Zvcm06IHRyYW5zbGF0ZVkoMXB4KTtcbiAgICAgIH1cbiAgICB9XG4gIH1cbiAgXG4gIC8vIENPTlRFw5pETyBQUklOQ0lQQUwgLSDDmk5JQ08gUE9OVE8gREUgU0NST0xMXG4gIC50YWItY29udGVudC1tYWluIHtcbiAgICBmbGV4OiAxO1xuICAgIG92ZXJmbG93LXk6IGF1dG87IC8vIFNDUk9MTCBBUEVOQVMgQVFVSVxuICAgIC13ZWJraXQtb3ZlcmZsb3ctc2Nyb2xsaW5nOiB0b3VjaDsgLy8gQ1LDjVRJQ08gcGFyYSBpT1NcbiAgICBvdmVyZmxvdy14OiBoaWRkZW47XG4gICAgaGVpZ2h0OiAxMDAlO1xuICAgIFxuICAgIC50YWItcGFuZSB7XG4gICAgICBkaXNwbGF5OiBub25lO1xuICAgICAgcGFkZGluZzogMDtcbiAgICAgIGFuaW1hdGlvbjogZmFkZUluIDAuMjVzIGVhc2U7XG4gICAgICBtaW4taGVpZ2h0OiAxMDAlOyAvLyBHYXJhbnRpciBhbHR1cmEgbcOtbmltYVxuICAgICAgXG4gICAgICAmLmFjdGl2ZSB7XG4gICAgICAgIGRpc3BsYXk6IGJsb2NrO1xuICAgICAgfVxuICAgICAgXG4gICAgICAvLyBSRU1PVkVSIG92ZXJmbG93LXkgZG9zIHBhbmVzIGluZGl2aWR1YWlzXG4gICAgICAvLyBPIHNjcm9sbCBhZ29yYSDDqSBjb250cm9sYWRvIHBlbG8gY29udGFpbmVyIHByaW5jaXBhbFxuICAgIH1cbiAgfVxufVxuXG4vLyAtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS1cbi8vIDMuIENvbXBvbmVudGVzIEludGVybm9zXG4vLyAtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS1cblxuLy8gQm90w7Vlc1xuLmJ0biB7XG4gIGRpc3BsYXk6IGJsb2NrO1xuICBwYWRkaW5nOiAkc3BhY2luZy1zbSAkc3BhY2luZy1tZDtcbiAgYm9yZGVyOiBub25lO1xuICBib3JkZXItcmFkaXVzOiAkYm9yZGVyLXJhZGl1cztcbiAgY3Vyc29yOiBwb2ludGVyO1xuICBmb250LXdlaWdodDogNTAwO1xuICBmb250LXNpemU6ICRmb250LXNpemUtc207XG4gIHRyYW5zaXRpb246IGFsbCAwLjJzIGVhc2U7XG4gIHRleHQtYWxpZ246IGNlbnRlcjtcbiAgdGV4dC1kZWNvcmF0aW9uOiBub25lO1xuICAtd2Via2l0LXRhcC1oaWdobGlnaHQtY29sb3I6IHRyYW5zcGFyZW50OyAvLyBNZWxob3JhciB0b3VjaCBubyBtb2JpbGVcbiAgXG4gICYucHJpbWFyeSB7XG4gICAgYmFja2dyb3VuZDogJHByaW1hcnktY29sb3I7XG4gICAgY29sb3I6IHdoaXRlO1xuICAgIFxuICAgICY6aG92ZXI6bm90KDpkaXNhYmxlZCkge1xuICAgICAgYmFja2dyb3VuZDogZGFya2VuKCRwcmltYXJ5LWNvbG9yLCAxMCUpO1xuICAgICAgdHJhbnNmb3JtOiB0cmFuc2xhdGVZKC0xcHgpO1xuICAgICAgYm94LXNoYWRvdzogMCAycHggNHB4IHJnYmEoMCwgMCwgMCwgMC4xKTtcbiAgICB9XG4gICAgXG4gICAgJjphY3RpdmU6bm90KDpkaXNhYmxlZCkge1xuICAgICAgdHJhbnNmb3JtOiB0cmFuc2xhdGVZKDApO1xuICAgIH1cbiAgfVxuIFxuICYuc2Vjb25kYXJ5IHtcbiAgYmFja2dyb3VuZDogJHNlY29uZGFyeS1jb2xvcjtcbiAgY29sb3I6IHdoaXRlO1xuICBcbiAgJjpob3Zlcjpub3QoOmRpc2FibGVkKSB7XG4gICBiYWNrZ3JvdW5kOiBkYXJrZW4oJHNlY29uZGFyeS1jb2xvciwgMTAlKTtcbiAgIHRyYW5zZm9ybTogdHJhbnNsYXRlWSgtMXB4KTtcbiAgfVxuICBcbiAgJjphY3RpdmU6bm90KDpkaXNhYmxlZCkge1xuICAgdHJhbnNmb3JtOiB0cmFuc2xhdGVZKDApO1xuICB9XG4gfVxuIFxuICY6ZGlzYWJsZWQge1xuICBvcGFjaXR5OiAwLjU7XG4gIGN1cnNvcjogbm90LWFsbG93ZWQ7XG4gIHRyYW5zZm9ybTogbm9uZSAhaW1wb3J0YW50O1xuIH1cbiBcbiAvLyBUYW1hbmhvc1xuICYucHktMSB7XG4gIHBhZGRpbmctdG9wOiAkc3BhY2luZy14cztcbiAgcGFkZGluZy1ib3R0b206ICRzcGFjaW5nLXhzO1xuIH1cbiBcbiAmLnB5LTIge1xuICBwYWRkaW5nLXRvcDogJHNwYWNpbmctc207XG4gIHBhZGRpbmctYm90dG9tOiAkc3BhY2luZy1zbTtcbiB9XG59XG5cbi8vIENhbXBvcyBkZSBmb3JtdWzDoXJpb1xuaW5wdXQsXG5zZWxlY3QsXG50ZXh0YXJlYSB7XG4gd2lkdGg6IDEwMCU7XG4gcGFkZGluZzogJHNwYWNpbmctc207XG4gYm9yZGVyOiAxcHggc29saWQgJGdyYXktMzAwO1xuIGJvcmRlci1yYWRpdXM6ICRib3JkZXItcmFkaXVzO1xuIGZvbnQtc2l6ZTogJGZvbnQtc2l6ZS1zbTtcbiBiYWNrZ3JvdW5kOiB3aGl0ZTtcbiB0cmFuc2l0aW9uOiBhbGwgMC4ycyBlYXNlO1xuIFxuICY6Zm9jdXMge1xuICBvdXRsaW5lOiBub25lO1xuICBib3JkZXItY29sb3I6ICRwcmltYXJ5LWNvbG9yO1xuICBib3gtc2hhZG93OiAwIDAgMCAzcHggcmdiYSgkcHJpbWFyeS1jb2xvciwgMC4xKTtcbiB9XG4gXG4gJjo6cGxhY2Vob2xkZXIge1xuICBjb2xvcjogJGdyYXktNDAwO1xuIH1cbn1cblxuLy8gVGVybWluYWwgT3V0cHV0XG4udGVybWluYWwtb3V0cHV0IHtcbiAgYmFja2dyb3VuZDogJGdyYXktOTAwO1xuICBjb2xvcjogIzEwYjk4MTtcbiAgcGFkZGluZzogJHNwYWNpbmctbWQ7XG4gIGJvcmRlci1yYWRpdXM6ICRib3JkZXItcmFkaXVzO1xuICBmb250LWZhbWlseTogJ01vbmFjbycsICdNZW5sbycsICdVYnVudHUgTW9ubycsIG1vbm9zcGFjZTtcbiAgZm9udC1zaXplOiAkZm9udC1zaXplLXhzO1xuICBsaW5lLWhlaWdodDogMS40O1xuICB3aGl0ZS1zcGFjZTogcHJlLXdyYXA7XG4gIHdvcmQtYnJlYWs6IGJyZWFrLWFsbDtcbiAgbWF4LWhlaWdodDogMTYwcHg7IC8vIFJlZHV6aXIgdW0gcG91Y28gcGFyYSBtb2JpbGVcbiAgb3ZlcmZsb3cteTogYXV0bztcbiAgLXdlYmtpdC1vdmVyZmxvdy1zY3JvbGxpbmc6IHRvdWNoO1xuICBcbiAgLy8gQ29yZXMgKG1hbnRpZG8gaWd1YWwpXG4gIC50ZXh0LXN1Y2Nlc3MgeyBjb2xvcjogJHN1Y2Nlc3MtY29sb3I7IH1cbiAgLnRleHQteWVsbG93LTQwMCB7IGNvbG9yOiAjZmJiZjI0OyB9XG4gIC50ZXh0LXJlZC00MDAgeyBjb2xvcjogJGVycm9yLWNvbG9yOyB9XG4gIC50ZXh0LWJsdWUtNDAwIHsgY29sb3I6ICM2MGE1ZmE7IH1cbiAgLnRleHQtZ3JheS00MDAgeyBjb2xvcjogJGdyYXktNDAwOyB9XG4gIC50ZXh0LWdyYXktNTAwIHsgY29sb3I6ICRncmF5LTUwMDsgfVxufVxuXG4vLyBTdGF0dXMgZSBpbmRpY2Fkb3Jlc1xuLnRleHQtc3VjY2VzcyB7XG4gY29sb3I6ICRzdWNjZXNzLWNvbG9yO1xufVxuXG4udGV4dC1lcnJvciB7XG4gY29sb3I6ICRlcnJvci1jb2xvcjtcbn1cblxuLy8gLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tXG4vLyA0LiBBbmltYcOnw7Vlc1xuLy8gLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tXG5cbkBrZXlmcmFtZXMgZmFkZUluIHtcbiBmcm9tIHtcbiAgb3BhY2l0eTogMDtcbiAgdHJhbnNmb3JtOiB0cmFuc2xhdGVZKDVweCk7XG4gfVxuIFxuIHRvIHtcbiAgb3BhY2l0eTogMTtcbiAgdHJhbnNmb3JtOiB0cmFuc2xhdGVZKDApO1xuIH1cbn1cblxuLy8gLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tXG4vLyA1LiBNb2RvIEVzY3Vyb1xuLy8gLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tXG5cbkBtZWRpYSAocHJlZmVycy1jb2xvci1zY2hlbWU6IGRhcmspIHtcbiAuc2lkZWJhci1jb250YWluZXIge1xuICBiYWNrZ3JvdW5kOiAkZ3JheS05MDA7XG4gIGNvbG9yOiAkZ3JheS0yMDA7XG4gIFxuICAuZmxleC5ib3JkZXItYiB7XG4gICBiYWNrZ3JvdW5kOiAkZ3JheS04MDA7XG4gICBib3JkZXItYm90dG9tLWNvbG9yOiAkZ3JheS03MDA7XG4gICBcbiAgIC50YWItYnRuIHtcbiAgICBjb2xvcjogJGdyYXktNDAwO1xuICAgIFxuICAgICYuYWN0aXZlIHtcbiAgICAgY29sb3I6ICRwcmltYXJ5LWNvbG9yO1xuICAgICBiYWNrZ3JvdW5kOiAkZ3JheS04MDA7XG4gICAgfVxuICAgIFxuICAgICY6aG92ZXI6bm90KC5hY3RpdmUpIHtcbiAgICAgYmFja2dyb3VuZDogJGdyYXktNzAwO1xuICAgICBjb2xvcjogJGdyYXktMjAwO1xuICAgIH1cbiAgIH1cbiAgfVxuICBcbiAgaW5wdXQsXG4gIHNlbGVjdCxcbiAgdGV4dGFyZWEge1xuICAgYmFja2dyb3VuZDogJGdyYXktODAwO1xuICAgYm9yZGVyLWNvbG9yOiAkZ3JheS02MDA7XG4gICBjb2xvcjogJGdyYXktMjAwO1xuICAgXG4gICAmOmZvY3VzIHtcbiAgICBib3JkZXItY29sb3I6ICRwcmltYXJ5LWNvbG9yO1xuICAgIGJveC1zaGFkb3c6IDAgMCAwIDNweCByZ2JhKCRwcmltYXJ5LWNvbG9yLCAwLjIpO1xuICAgfVxuICAgXG4gICAmOjpwbGFjZWhvbGRlciB7XG4gICAgY29sb3I6ICRncmF5LTUwMDtcbiAgIH1cbiAgfVxuICBcbiAgLnRlcm1pbmFsLW91dHB1dCB7XG4gICBiYWNrZ3JvdW5kOiAjMGQxMTE3O1xuICAgY29sb3I6ICMxMGI5ODE7XG4gIH1cbiAgXG4gIC5ib3JkZXIge1xuICAgYm9yZGVyLWNvbG9yOiAkZ3JheS02MDA7XG4gIH1cbiAgXG4gIC5iZy13aGl0ZSB7XG4gICBiYWNrZ3JvdW5kOiAkZ3JheS04MDAgIWltcG9ydGFudDtcbiAgfVxuICBcbiAgLmJnLWdyYXktOTAwIHtcbiAgIGJhY2tncm91bmQ6ICRncmF5LTkwMCAhaW1wb3J0YW50O1xuICB9XG4gfVxufVxuXG5cblxuLy8gLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tXG4vLyA3LiBVdGlsaXTDoXJpb3MgUmVzcG9uc2l2b3Ncbi8vIC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLVxuXG5AbWVkaWEgKG1heC13aWR0aDogNzY4cHgpIHtcbiAuc2lkZWJhci1jb250YWluZXIge1xuICAuZmxleC5ib3JkZXItYiAudGFiLWJ0biB7XG4gICBwYWRkaW5nOiAkc3BhY2luZy14cyAkc3BhY2luZy14eHM7XG4gICBmb250LXNpemU6ICRmb250LXNpemUteHM7XG4gIH1cbiAgXG4gIC50YWItY29udGVudCAudGFiLXBhbmUgLnAtMiB7XG4gICBwYWRkaW5nOiAkc3BhY2luZy1zbTtcbiAgfVxuIH1cbn1cblxuLy8gLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tXG4vLyA4LiBFc3RhZG9zIGRlIExvYWRpbmcgZSBEaXNhYmxlZFxuLy8gLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tXG5cbi5sb2FkaW5nIHtcbiBvcGFjaXR5OiAwLjc7XG4gcG9pbnRlci1ldmVudHM6IG5vbmU7XG4gcG9zaXRpb246IHJlbGF0aXZlO1xuIFxuICY6OmFmdGVyIHtcbiAgY29udGVudDogJyc7XG4gIHBvc2l0aW9uOiBhYnNvbHV0ZTtcbiAgdG9wOiA1MCU7XG4gIGxlZnQ6IDUwJTtcbiAgd2lkdGg6IDE2cHg7XG4gIGhlaWdodDogMTZweDtcbiAgbWFyZ2luOiAtOHB4IDAgMCAtOHB4O1xuICBib3JkZXI6IDJweCBzb2xpZCB0cmFuc3BhcmVudDtcbiAgYm9yZGVyLXRvcDogMnB4IHNvbGlkICRwcmltYXJ5LWNvbG9yO1xuICBib3JkZXItcmFkaXVzOiA1MCU7XG4gIGFuaW1hdGlvbjogc3BpbiAxcyBsaW5lYXIgaW5maW5pdGU7XG4gfVxufVxuXG5Aa2V5ZnJhbWVzIHNwaW4ge1xuIDAlIHtcbiAgdHJhbnNmb3JtOiByb3RhdGUoMGRlZyk7XG4gfVxuIFxuIDEwMCUge1xuICB0cmFuc2Zvcm06IHJvdGF0ZSgzNjBkZWcpO1xuIH1cbn1cblxuXG4vLyAtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS1cbi8vIDkuIENPUlJFw4fDlUVTIEVTUEVDw41GSUNBUyBQQVJBIFRPVUNIXG4vLyAtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS1cblxuLy8gTWVsaG9yYXIgcGVyZm9ybWFuY2Ugbm8gc2Nyb2xsIHRvdWNoXG4udGFiLWNvbnRlbnQtbWFpbiB7XG4gIHRyYW5zZm9ybTogdHJhbnNsYXRlWigwKTsgLy8gQWNlbGVyYXIgaGFyZHdhcmVcbiAgYmFja2ZhY2UtdmlzaWJpbGl0eTogaGlkZGVuO1xuICBwZXJzcGVjdGl2ZTogMTAwMDtcbn1cblxuLy8gUHJldmVuaXIgem9vbSBubyBkb3VibGUtdGFwIChpT1MpXG4uc2lkZWJhci1jb250YWluZXIge1xuICB0b3VjaC1hY3Rpb246IHBhbi15OyAvLyBTw7MgcGVybWl0ZSBzY3JvbGwgdmVydGljYWxcbn1cblxuLy8gTWVsaG9yYXIgdG9xdWUgZW0gYm90w7VlcyBlIGlucHV0c1xuLmJ0biwgaW5wdXQsIHNlbGVjdCwgdGV4dGFyZWEge1xuICAtd2Via2l0LXRhcC1oaWdobGlnaHQtY29sb3I6IHRyYW5zcGFyZW50O1xuICB0b3VjaC1hY3Rpb246IG1hbmlwdWxhdGlvbjsgLy8gTWVsaG9yIHJlc3Bvc3RhIGFvIHRvcXVlXG59XG5cbi8vIEdhcmFudGlyIHF1ZSBjb250ZcO6ZG8gdGVuaGEgYWx0dXJhIHN1ZmljaWVudGUgcGFyYSBzY3JvbGxcbi50YWItcGFuZSA+IGRpdiB7XG4gIG1pbi1oZWlnaHQ6IGNhbGMoMTAwdmggLSAxMjBweCk7IC8vIEFsdHVyYSBtw61uaW1hIGJhc2VhZGEgbmEgdmlld3BvcnRcbn1cblxuIl19 */`;
-document.head.appendChild(document.createElement("style")).appendChild(document.createTextNode(css));
-
-// src/main.ts
-var toast = acode.require("toast");
-var AcodePlugin = class {
-  baseUrl;
-  sideBarApps;
-  async init($page, cacheFile, cacheFileUrl) {
-    try {
-      this.sideBarApps = window.sidebarApps || acode.require("sidebarApps");
-      if (!this.sideBarApps) {
-        console.error("sidebarApps n\xE3o dispon\xEDvel");
-        return;
-      }
-      const iconUrl = `${this.baseUrl || ""}assets/icon.png`;
-      acode.addIcon("sidebar-icon", iconUrl);
-      this.sideBarApps.add(
-        "sidebar-icon",
-        "agente_IA",
-        "Agente IA",
-        (container) => this.initializeAppUI(container),
-        false,
-        (container) => this.onAppSelected(container)
-      );
-      console.log("Plugin inicializado com sucesso");
-    } catch (error) {
-      console.error("Erro ao inicializar plugin:", error);
-    }
-  }
-  initializeAppUI(container) {
-    container.innerHTML = `
-    <div class="sidebar-container ">
-      <!-- Abas  -->
-      <div class="flex border-b">
-        <button class="tab-btn active" data-tab="assistant">Assistente</button>
-        <button class="tab-btn" data-tab="projects">Projetos</button>
-        <button class="tab-btn" data-tab="settings">CONFIG</button>
-      </div>
-
-      <!-- CONTE\xDADO \u2013 **\xFAnico ponto de scroll** -->
-      <div class="tab-content-main scroll">
-        <!-- Assistente -->
-        <div class="tab-pane active" id="assistant-tab">
-          <div class="p-2">
-            <h3 class="font-bold mb-2">Assistente IA</h3>
-            ${this.getAssistantContent()}
+        <div class="chat-input-wrapper inverted">
+          <textarea id="chat-input" placeholder="Digite sua mensagem..." rows="1"></textarea>
+          <div class="chat-input-top">
+            <span id="model-indicator">Modelo: </span>
+            <button id="send-message" class="send-btn icon send" title="Enviar"></button>
           </div>
         </div>
 
-        <!-- Projetos -->
-        <div class="tab-pane" id="projects-tab">
-          <div class="p-2">
-            <h3 class="font-bold mb-2">Projetos</h3>
-            <div id="project-creator-content"></div>
-          </div>
-        </div>
-
-        <!-- Config -->
-        <div class="tab-pane" id="settings-tab">
-          <div class="p-2">
-            ${this.getSettingsContent()}
+        <div id="chat-messages" class="chat-messages scroll">
+          <div class="message system">
+            <p>${this.userProfile(e)}Como posso ajudar voc\xEA hoje?</p>
           </div>
         </div>
       </div>
-    </div>
-  `;
-    setTimeout(() => {
-      this.initializeTabSystem(container);
-      this.initializeProjectCreatorUI(container);
-      this.initializeAssistantUI(container);
-      this.initializeSettingsUI(container);
-    }, 100);
-  }
-  initializeTabSystem(container) {
-    const buttons = container.querySelectorAll(".tab-btn");
-    const panes = container.querySelectorAll(".tab-pane");
-    buttons.forEach((btn) => {
-      btn.addEventListener("click", () => {
-        const tab = btn.dataset.tab;
-        const paneId = `${tab}-tab`;
-        buttons.forEach((b) => b.classList.remove("active"));
-        btn.classList.add("active");
-        panes.forEach((p) => {
-          p.classList.toggle("active", p.id === paneId);
-        });
-      });
-    });
-  }
-  initializeProjectCreatorUI(container) {
-    const projectContainer = container.querySelector("#project-creator-content");
-    if (!projectContainer) {
-      console.error("Container #project-creator-content n\xE3o encontrado");
-      return;
-    }
-    class CLIProjectCreator {
-      getAvailableTemplates() {
-        return {
-          vanilla: { name: "Vanilla JS", description: "Projeto JS puro" },
-          react: { name: "React", description: "App React com Vite" },
-          node: { name: "Node.js", description: "API com Express" }
-        };
-      }
-    }
-    const creator = new CLIProjectCreator();
-    const templates = creator.getAvailableTemplates();
-    let options = "";
-    for (const [key, tmpl] of Object.entries(templates)) {
-      options += `<option value="${key}">${tmpl.name} - ${tmpl.description}</option>`;
-    }
-    projectContainer.innerHTML = `
-      <!-- Formul\xE1rio -->
-      <div class="space-y-3 mb-4">
-        <div>
-          <label class="block text-sm font-medium mb-1">Template:</label>
-          <select id="project-template" class="w-full p-2 border rounded">
-            ${options}
+    `}static userProfile(e){return e?`Ol\xE1, ${l.escapeHtml(e)}! `:"Ol\xE1! "}static getTypingIndicator(){return`
+      <div class="message assistant typing-indicator" id="typing-indicator">
+        <div class="typing-dots">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </div>
+    `}};var y=class{static render(e){let t=e.getRules(),r=e.countActiveRules(),o=Object.entries({preferTypescript:"Preferir TypeScript",preferCleanCode:"C\xF3digo Limpo",explainLikeTeacher:"Explicar como Professor",simpleLanguage:"Linguagem Simples",showAlternativeSolutions:"Mostrar Solu\xE7\xF5es Alternativas",optimizePerformance:"Otimizar Performance",autoDetectLanguage:"Detectar Idioma Automaticamente"}).map(([n,a])=>`
+        <div class="rule-item">
+          <span class="text-sm">${a}</span>
+          <label class="toggle-switch">
+            <input type="checkbox" data-rule="${n}" ${t[n]?"checked":""}>
+            <span class="slider"></span>
+          </label>
+        </div>
+      `).join("");return`
+      <div class="p-2">
+        <h3 class="font-bold mb-3">Rules Manager</h3>
+        <div class="rules-status mb-4 p-3 bg-blue-50 rounded border">
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <span>Regras ativas: <strong>${r}</strong></span>
+            <button id="reset-rules" class="btn-sm bg-red-500 text-white rounded px-2 py-1 text-xs">Resetar</button>
+          </div>
+        </div>
+        <div class="toggle-rules mb-4">
+          <h4 class="font-semibold mb-2">Regras Configur\xE1veis</h4>
+          <div class="space-y-2">
+            ${o}
+          </div>
+        </div>
+        <div class="custom-rules">
+          <h4 class="font-semibold mb-2">Regras Personalizadas (JSON)</h4>
+          <textarea id="custom-rules-json" placeholder='{"exemplo": "valor"}' rows="4" class="w-full p-2 rounded border text-sm font-mono">${JSON.stringify(t.customRules||{},null,2)}</textarea>
+          <button id="save-custom-rules" class="btn-primary w-full mt-2">Aplicar Regras Customizadas</button>
+        </div>
+      </div>
+    `}};var M=class{static render(e){return`
+      <div class="p-2">
+        <h3 class="font-bold mb-2">Configura\xE7\xF5es de API</h3>
+
+        <div class="config-section">
+          <label for="user-name" class="block mb-1">Como gosta de ser chamado:</label>
+          <input type="text" id="user-name" placeholder="Seu nome ou apelido..." value="${l.escapeHtml(e.userName||"")}" class="config-input">
+          <small class="text-muted">Este nome ser\xE1 usado nas sauda\xE7\xF5es</small>
+        </div>
+
+        <div class="config-section mt-3">
+          <label for="api-provider" class="block mb-1">Provedor:</label>
+          <select id="api-provider" class="config-select">
+            <option value="openai" ${e.provider==="openai"?"selected":""}>OpenAI</option>
+            <option value="gemini" ${e.provider==="gemini"?"selected":""}>Gemini</option>
+            <option value="deepseek" ${e.provider==="deepseek"?"selected":""}>DeepSeek</option>
+            <option value="claude" ${e.provider==="claude"?"selected":""}>Claude</option>
           </select>
         </div>
 
-        <div>
-          <label class="block text-sm font-medium mb-1">Nome do Projeto:</label>
-          <input type="text" id="project-name" placeholder="meu-projeto"
-                 class="w-full p-2 border rounded"
-                 value="meu-projeto-${Date.now().toString().slice(-4)}">
+        <div class="config-section mt-3">
+          <label for="api-key" class="block mb-1">API Key:</label>
+          <input type="password" id="api-key" placeholder="Sua chave API..." class="config-input" autocomplete="new-password">
+          <div class="flex items-center gap-2 mt-2">
+            <button id="reveal-key" class="btn-sm">Mostrar</button>
+            <button id="clear-key" class="btn-sm">Limpar</button>
+          </div>
         </div>
 
-        <button class="btn primary w-full py-2" id="create-project">
-          Criar Projeto
-        </button>
+        <div class="config-section mt-3">
+          <label for="api-model" class="block mb-1">Modelo:</label>
+          <select id="api-model" class="config-select">
+            <option value="gpt-4" ${e.model==="gpt-4"?"selected":""}>GPT-4</option>
+            <option value="gpt-3.5-turbo" ${e.model==="gpt-3.5-turbo"?"selected":""}>GPT-3.5 Turbo</option>
+            <option value="gemini-pro" ${e.model==="gemini-pro"?"selected":""}>Gemini Pro</option>
+            <option value="deepseek-coder" ${e.model==="deepseek-coder"?"selected":""}>DeepSeek Coder</option>
+            <option value="gpt-4o-mini" ${e.model==="gpt-4o-mini"?"selected":""}>gpt-4o-mini</option>
+          </select>
+        </div>
 
-        <div class="text-xs text-gray-500 text-center">
-          Criado via terminal - R\xE1pido e eficiente
+        <div class="config-section mt-3">
+          <label for="temperature" class="block mb-1">Temperatura: <span id="temp-value">${e.temperature||.7}</span></label>
+          <input type="range" id="temperature" min="0" max="1" step="0.1" value="${e.temperature||.7}" class="config-slider">
         </div>
-      </div>
 
-      <!-- Terminal -->
-      <div class="terminal-section mb-4">
-        <div class="flex justify-between items-center mb-1">
-          <label class="text-sm font-medium">Terminal Output:</label>
-          <button class="btn secondary text-xs py-1" id="clear-output">Limpar</button>
-        </div>
-        <div id="terminal-output" class="terminal-output bg-gray-900 text-green-400 p-3 rounded font-mono text-xs h-40 overflow-auto">
-$ Aguardando comando...
+        <div class="config-actions mt-4">
+          <button id="test-api" class="btn-secondary">Testar API</button>
+          <button id="save-config" class="btn-primary">Salvar</button>
         </div>
       </div>
+    `}};var k=class{constructor(e){this.container=e}initialize(){let e=Array.from(this.container.querySelectorAll(".tab-btn")),t=this.container.querySelector(".tab-indicator");t&&(t.style.width=`${100/Math.max(e.length,1)}%`,t.style.transform="translateX(0%)"),e.forEach((r,o)=>{r.addEventListener("click",()=>{this.switchTab(e,t,r,o)})})}switchTab(e,t,r,o){e.forEach(a=>a.classList.remove("active")),r.classList.add("active"),t&&(t.style.transform=`translateX(${o*100}%)`);let n=r.dataset.tab;this.container.querySelectorAll(".tab-pane").forEach(a=>{a.classList.toggle("active",a.id===`${n}-tab`)})}};var p=class{static addMessage(e,t,r){let o=e.querySelector("#chat-messages");if(!o)return;let n=document.createElement("div");if(n.className=`message ${t}`,t==="user"){let a=document.createElement("p");a.textContent=r,n.appendChild(a)}else{let a=this.safeFormatContent(r);n.innerHTML=a}o.appendChild(n),this.applySyntaxHighlighting(n),requestAnimationFrame(()=>{o.scrollTo({top:o.scrollHeight,behavior:"smooth"})})}static showTypingIndicator(e){let t=e.querySelector("#chat-messages");if(!t)return;let r=document.createElement("div");r.className="message assistant typing-indicator",r.id="typing-indicator",r.innerHTML=`
+      <div class="typing-dots">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    `,t.appendChild(r),t.scrollTo({top:t.scrollHeight,behavior:"smooth"})}static hideTypingIndicator(e){let t=e.querySelector("#typing-indicator");t&&t.remove()}static safeFormatContent(e){let t={},r=0,o=(d,g)=>{let h=`CODE_TOKEN_${r++}`;return t[h]={lang:d||"text",code:g},h},n=e.replace(/```(\w+)?\s*([\s\S]*?)```/g,(d,g,h)=>o(g||"text",h));return l.escapeHtml(n).split(/(CODE_TOKEN_\d+)/).map(d=>{if(d.match(/^(CODE_TOKEN_\d+)$/)){let h=t[d];if(!h)return"";let z=l.escapeHtml(h.code.replace(/\r\n/g,`
+`)),P=l.escapeHtml(h.lang||"text"),$="code-"+Date.now()+"-"+Math.random().toString(36).slice(2,9);return`
+          <div class="code-block">
+            <div class="code-header">
+              <span class="code-language">${l.escapeHtml(h.lang)}</span>
+              <button class="copy-btn" data-code-id="${$}">\u{1F4CB}</button>
+            </div>
+            <pre><code id="${$}" class="hljs language-${P}">${z}</code></pre>
+          </div>
+        `}else return d.replace(/\n/g,"<br>")}).join("").replace(/`([^`]+)`/g,(d,g)=>`<code class="inline-code">${l.escapeHtml(g)}</code>`)}static applySyntaxHighlighting(e){try{let t=window.hljs;if(!t)return;Array.from(e.querySelectorAll("pre code")).forEach(o=>{t.highlightElement?t.highlightElement(o):t.highlightBlock&&t.highlightBlock(o)})}catch(t){console.error("Erro ao aplicar highlight:",t)}}static setupCopyDelegation(e){let t=e.querySelector("#chat-messages");t&&t.addEventListener("click",async r=>{let o=r.target,n=o.closest?o.closest(".copy-btn"):null;if(!n)return;r.preventDefault();let a=n.dataset.codeId;if(!a)return;let s=t.querySelector(`#${a}`)?.textContent??"",m=n.innerHTML;n.innerHTML="\u23F3";let d=await v.copyToClipboard(s),g=acode.require("toast");d?(n.innerHTML="\u2705",g("C\xF3digo copiado!")):(n.innerHTML="\u274C",g("Erro ao copiar")),setTimeout(()=>{n.innerHTML=m},1500)})}};var C=class{constructor(e,t,r){this.container=e;this.onSendMessage=t;this.onClearChat=r}initialize(){this.setupSendEvent(),this.setupClearEvent(),this.setupHistoryEvent(),p.setupCopyDelegation(this.container)}setupSendEvent(){let e=this.container.querySelector("#send-message"),t=this.container.querySelector("#chat-input"),r=()=>{if(!t||!t.value.trim())return;let o=t.value.trim();this.onSendMessage(o),t.value="",l.autoResizeTextarea(t)};e?.addEventListener("click",r),t?.addEventListener("keydown",o=>{o.key==="Enter"&&!o.shiftKey&&(o.preventDefault(),r())}),t?.addEventListener("input",()=>{t&&l.autoResizeTextarea(t)})}setupClearEvent(){this.container.querySelector("#clear-chat")?.addEventListener("click",this.onClearChat)}setupHistoryEvent(){this.container.querySelector("#history-chat")?.addEventListener("click",()=>{console.log("Hist\xF3rico clicado")})}setupCopyDelegation(){let e=this.container.querySelector("#chat-messages");e&&e.addEventListener("click",async t=>{let r=t.target,o=r.closest?r.closest(".copy-btn"):null;if(!o)return;t.preventDefault();let n=o.dataset.codeId;if(!n)return;let i=e.querySelector(`#${n}`)?.textContent??"",s=o.innerHTML;o.innerHTML="\u23F3",console.log("Copiar c\xF3digo:",i),setTimeout(()=>{o.innerHTML=s},1500)})}};var f=class{constructor(e,t,r){this.container=e;this.ruleManager=t;this.onRulesUpdated=r}initialize(){this.setupToggleEvents(),this.setupResetEvent(),this.setupCustomRulesEvent()}setupToggleEvents(){this.container.addEventListener("change",e=>{let t=e.target;if(!t.matches('input[type="checkbox"][data-rule]'))return;let r=t.dataset.rule,o=t.checked;this.ruleManager.setToggleRule(r,o),acode.require("toast")(`Regra "${r}" ${o?"ativada":"desativada"}`)})}setupResetEvent(){this.container.querySelector("#reset-rules")?.addEventListener("click",()=>{this.ruleManager.resetRules(),acode.require("toast")("Regras resetadas"),this.onRulesUpdated()})}setupCustomRulesEvent(){this.container.querySelector("#save-custom-rules")?.addEventListener("click",()=>this.saveCustomRules())}saveCustomRules(){let e=this.container.querySelector("#custom-rules-json");if(e)try{let t=JSON.parse(e.value||"{}");this.ruleManager.setCustomRules(t),acode.require("toast")("Regras salvas com sucesso!")}catch{acode.require("toast")("JSON inv\xE1lido nas regras personalizadas")}}};var L=class{constructor(e,t,r,o){this.container=e;this.onSaveConfig=t;this.onTestAPI=r;this.cryptoUtils=o}initialize(){this.setupTemperatureSlider(),this.setupApiKeyEvents(),this.setupSaveEvent(),this.setupTestEvent()}setupTemperatureSlider(){let e=this.container.querySelector("#temperature"),t=this.container.querySelector("#temp-value");e?.addEventListener("input",()=>{t&&e&&(t.textContent=e.value)})}setupApiKeyEvents(){let e=this.container.querySelector("#reveal-key"),t=this.container.querySelector("#clear-key");e?.addEventListener("click",r=>{r.preventDefault();let o=this.container.querySelector("#api-key");o&&(o.type=o.type==="password"?"text":"password")}),t?.addEventListener("click",r=>{r.preventDefault();let o=this.container.querySelector("#api-key");o&&(o.value="")})}setupSaveEvent(){this.container.querySelector("#save-config")?.addEventListener("click",()=>this.onSaveConfig())}setupTestEvent(){this.container.querySelector("#test-api")?.addEventListener("click",()=>this.onTestAPI())}};var A=class{container;actionStack;constructor(e){this.container=e,this.actionStack=acode.require("actionStack")}renderAnalyzeButton(){let e=document.createElement("button");e.id="analyze-context",e.className="analyze-btn",e.innerHTML="\u{1F50D}",e.title="Analisar arquivo e projeto atual",e.addEventListener("click",()=>{this.handleContextAnalysis()});let t=this.container.querySelector(".chat-input-wrapper");t&&t.appendChild(e),this.actionStack.push({id:"context-analyzer",action:()=>e.remove()})}async handleContextAnalysis(){try{this.setAnalyzeButtonState("loading"),await this.simpleContextAnalysis()}catch(e){console.error("Erro na an\xE1lise de contexto:",e),this.showError("Erro ao analisar contexto")}finally{this.setAnalyzeButtonState("ready")}}async simpleContextAnalysis(){let e=acode.require("toast");try{let{editor:t}=editorManager,r=editorManager.activeFile;if(!r){e("Nenhum arquivo aberto no editor");return}let o=r.filename,n=r.language||"text";e(`Analisando: ${o} (${n})`),this.addContextMessage(o,n)}catch{e("N\xE3o foi poss\xEDvel acessar o editor")}}addContextMessage(e,t){let r=this.container.querySelector("#chat-messages");if(!r)return;let o=document.createElement("div");o.className="message system context-analysis",o.innerHTML=`
+      <div class="context-info">
+        <strong>\u{1F4C1} Contexto Analisado:</strong>
+        <div>Arquivo: <code>${e}</code></div>
+        <div>Linguagem: <code>${t}</code></div>
+        <div class="context-suggestions">
+          <small>Posso ajudar com: an\xE1lise de c\xF3digo, sugest\xF5es de melhoria, detec\xE7\xE3o de erros...</small>
+        </div>
+      </div>
+    `,r.appendChild(o),r.scrollTo({top:r.scrollHeight,behavior:"smooth"})}setAnalyzeButtonState(e){let t=this.container.querySelector("#analyze-context");if(t)switch(e){case"loading":t.innerHTML="\u23F3 Analisando...",t.disabled=!0;break;case"error":t.innerHTML="\u274C Erro",t.disabled=!1,setTimeout(()=>{t.innerHTML="\u{1F50D} Analisar Contexto"},2e3);break;default:t.innerHTML="\u{1F50D} Analisar Contexto",t.disabled=!1}}showError(e){acode.require("toast")(e)}};var H=acode.require("sidebarApps"),b=acode.require("toast"),x=acode.require("settings"),R=class{contextAnalyzer;container=null;id=u.id;ruleManager;aiService=null;baseUrl="";cryptoUtils;$mainStyle=null;constructor(){this.ruleManager=new w,this.cryptoUtils=new S,this.initializeSettings()}initializeSettings(){x.value[u.id]||(x.value[u.id]={apiKey:"",provider:"openai",model:"gpt-4o-mini",temperature:.7,userName:"",rules:this.ruleManager.getRules()},x.update())}async init(){try{let e=`${this.baseUrl}assets/icon.png`;acode.addIcon("sidebar-icon",e),this.loadGlobalStyles(),await this.loadHighlightJS(),H.add("sidebar-icon","agente_IA","Agente IA",t=>{this.container=t,this.renderContainer()},()=>this.onAppSelected()),console.log("Plugin inicializado com sucesso")}catch(e){console.error("Erro ao inicializar plugin:",e)}}loadGlobalStyles(){this.$mainStyle=l.loadStylesheet(`${this.baseUrl}main.css`)}async loadHighlightJS(){try{typeof v.loadHighlight=="function"&&await v.loadHighlight(this.baseUrl)}catch(e){console.warn("N\xE3o foi poss\xEDvel carregar highlight.js:",e)}}renderContainer(){if(!this.container)return;let e=this.getSettings();this.container.innerHTML=`
+      <div class="sidebar-container scroll">
+        <div class="tabs-header">
+          <button class="tab-btn active" data-tab="chat"><span>Chat</span></button>
+          <button class="tab-btn" data-tab="rules"><span>Rules</span></button>
+          <button class="tab-btn" data-tab="config"><span>Config</span></button>
+          <div class="tab-indicator"></div>
+        </div>
 
-      <!-- Conte\xFAdo longo para scroll -->
-      ${this.getProjectCreatorContent()}
-    `;
-    projectContainer.addEventListener("click", (e) => {
-      const target = e.target;
-      if (target.id === "create-project") {
-        this.handleCreateProject();
-      }
-      if (target.id === "clear-output") {
-        const output = document.getElementById("terminal-output");
-        if (output) output.innerHTML = "$ Output limpo\n";
-      }
-    });
-  }
-  getProjectCreatorContent() {
-    return `
-      <div class="p-2 mt-6 border-t pt-4 space-y-2">
-        <h3 class="font-bold mb-2">Teste de Scroll (Projetos)</h3>
-        <p>Role para baixo para testar o scroll nesta aba tamb\xE9m</p>
-        ${Array(40).fill(`<p class="text-sm text-gray-700 dark:text-gray-300">Projeto exemplo em constru\xE7\xE3o... informa\xE7\xF5es de template, configura\xE7\xF5es, logs, etc.</p>`).join("")}
-      </div>
-    `;
-  }
-  getAssistantContent() {
-    return `
-      <div class="space-y-2" id="assistant-content">
-        <p class="p-2">Bem-vindo ao Assistente IA!</p>
-        <p class="p-2">Role para baixo para testar o scroll</p>
-        ${Array(50).fill(`<p class="text-sm">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus.</p>`).join("")}
-      </div>
-    `;
-  }
-  getSettingsContent() {
-    return `
-      <div class="space-y-3" id="settings-content">
-        <h3 class="font-bold mb-2">Configura\xE7\xF5es Gerais</h3>
-        <div class="space-y-2">
-          <label class="flex items-center gap-2">
-            <input type="checkbox" checked class="rounded"> Habilitar IA
-          </label>
-          <label class="flex items-center gap-2">
-            <input type="checkbox" class="rounded"> Modo Dark
-          </label>
+        <div class="tab-content">
+          <div class="tab-pane active" id="chat-tab">
+            ${T.render(e.userName)}
+          </div>
+
+          <div class="tab-pane" id="rules-tab">
+            <div class="rules-content p-5">${y.render(this.ruleManager)}</div>
+          </div>
+
+          <div class="tab-pane" id="config-tab">
+            <div class="config-content p-5">${M.render(e)}</div>
+          </div>
         </div>
-        ${Array(90).fill(`<p class="text-sm text-gray-600 dark:text-gray-400">Op\xE7\xE3o de configura\xE7\xE3o avan\xE7ada...</p>`).join("")}
       </div>
-    `;
-  }
-  initializeAssistantUI(container) {
-    const el = container.querySelector("#assistant-content");
-    if (!el) return;
-    el.addEventListener("click", (e) => {
-      const t = e.target;
-      if (t.id === "btn-generate-code") this.handleGenerateCode();
-    });
-  }
-  initializeSettingsUI(container) {
-    const el = container.querySelector("#settings-content");
-    if (!el) return;
-  }
-  // Métodos de ação (exemplos)
-  handleCreateProject() {
-    toast("Projeto criado com sucesso!");
-  }
-  handleGenerateCode() {
-    toast("C\xF3digo gerado!");
-  }
-  onAppSelected(container) {
-    toast("Podemos iniciar", 400);
-  }
-  async destroy() {
-    if (this.sideBarApps) {
-      this.sideBarApps.remove("agente_IA");
-      this.sideBarApps.remove("sidebar-icon");
-    }
-  }
-};
-if (window.acode) {
-  const acodePlugin = new AcodePlugin();
-  acode.setPluginInit(plugin_default.id, async (baseUrl, $page, { cacheFileUrl, cacheFile }) => {
-    if (!baseUrl.endsWith("/")) baseUrl += "/";
-    acodePlugin.baseUrl = baseUrl;
-    await acodePlugin.init($page, cacheFile, cacheFileUrl);
-  });
-  acode.setPluginUnmount(plugin_default.id, () => {
-    acodePlugin.destroy();
-  });
-}
-//# sourceMappingURL=main.js.map
+    `,this.initializeUIComponents()}initializeUIComponents(){if(!this.container)return;new k(this.container).initialize(),new C(this.container,n=>this.sendMessage(n),()=>this.clearChat()).initialize(),new f(this.container,this.ruleManager,()=>this.refreshRulesUI()).initialize(),new L(this.container,()=>this.saveConfig(),()=>this.testAPI(),this.cryptoUtils).initialize(),this.contextAnalyzer=new A(this.container),this.contextAnalyzer.renderAnalyzeButton(),this.loadSavedConfig()}async sendMessage(e){p.addMessage(this.container,"user",e),p.showTypingIndicator(this.container);try{let t=this.getSettings();if(!t.apiKey)throw new Error("Configure uma API Key primeiro na aba Config");let r=await this.cryptoUtils.decrypt(t.apiKey);if(!r)throw new Error("API Key inv\xE1lida");this.aiService=new E({apiKey:r,provider:t.provider,model:t.model,temperature:t.temperature});let n=`
+REGRAS DO SISTEMA:
+${this.ruleManager.getRulesAsText()}
+
+MENSAGEM DO USU\xC1RIO:
+${e}
+
+Por favor, responda seguindo as regras acima.`.trim(),a=await this.aiService.sendMessage(n);p.hideTypingIndicator(this.container),p.addMessage(this.container,"assistant",a)}catch(t){p.hideTypingIndicator(this.container);let r=t?.message??String(t);p.addMessage(this.container,"system",`Erro: ${r}`),console.error("sendMessage error:",t)}}clearChat(){let e=this.container?.querySelector("#chat-messages");if(!e)return;e.innerHTML="";let t=this.getSettings();p.addMessage(this.container,"system",`${t.userName?`Ol\xE1, ${t.userName}! `:"Ol\xE1! "}Como posso ajudar voc\xEA hoje?`)}refreshRulesUI(){let e=this.container.querySelector(".rules-content");e&&(e.innerHTML=y.render(this.ruleManager),new f(this.container,this.ruleManager,()=>this.refreshRulesUI()).initialize())}async saveConfig(){let e=this.container?.querySelector("#api-key"),t=this.container?.querySelector("#api-provider"),r=this.container?.querySelector("#api-model"),o=this.container?.querySelector("#temperature"),n=this.container?.querySelector("#user-name"),a=this.getSettings();if(!e||!t||!r||!o){b("Campos de configura\xE7\xE3o incompletos");return}let i=e.value.trim();i!==""&&(a.apiKey=await this.cryptoUtils.encrypt(i)),a.provider=t.value,a.model=r.value,a.temperature=parseFloat(o.value),a.userName=n?.value||a.userName,x.update(),b("Configura\xE7\xF5es salvas!");let s=this.container?.querySelector("#model-indicator");s&&(s.textContent=`Modelo: ${a.model}`)}testAPI(){b("Testando conex\xE3o com API..."),setTimeout(()=>{b("Conex\xE3o com API bem-sucedida!")},1500)}async loadSavedConfig(){if(!this.container)return;let e=this.getSettings();if(!e)return;let t=this.container.querySelector("#api-key"),r=this.container.querySelector("#api-provider"),o=this.container.querySelector("#api-model"),n=this.container.querySelector("#temperature"),a=this.container.querySelector("#temp-value"),i=this.container.querySelector("#user-name");if(r&&e.provider&&(r.value=e.provider),o&&e.model){o.value=e.model;let s=this.container.querySelector("#model-indicator");s&&(s.textContent=`Modelo: ${e.model}`)}if(n&&e.temperature!==void 0&&(n.value=e.temperature.toString(),a&&(a.textContent=e.temperature.toString())),i&&e.userName&&(i.value=e.userName),t)if(e.apiKey)try{let s=await this.cryptoUtils.decrypt(e.apiKey);t.value=s||""}catch(s){console.error("Erro ao carregar apiKey:",s),t.value=""}else t.value=""}getSettings(){return x.value[u.id]||{}}onAppSelected(){b("Agente IA ativado")}async destroy(){H&&(H.remove("agente_IA"),H.remove("sidebar-icon")),this.$mainStyle&&this.$mainStyle.remove()}};if(window.acode){let c=new R;acode.setPluginInit(u.id,async(e,t,{cacheFileUrl:r,cacheFile:o})=>{e.endsWith("/")||(e+="/"),c.baseUrl=e,await c.init()}),acode.setPluginUnmount(u.id,()=>{c.destroy()})}})();

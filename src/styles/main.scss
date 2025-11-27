@@ -1,246 +1,532 @@
-// ------------------------------------
-// 1. _variables (Ajustado para Grayscapes)
-// ------------------------------------
+/* ============================================= */
+/*               MAIN.SCSS – COMPLETO             */
+/*  Estilo moderno tipo Cursor / Copilot Chat  */
+/* ============================================= */
 
-$primary-color: #2e2e2f;
-$secondary-color: #4b5563;
-$success-color: #10b981;
-$error-color: #ef4444;
-
-// Tons de Cinza para o Tema Base - NOMES CORRIGIDOS
-$gray-50: #f9fafb;
-$gray-100: #f3f4f6;
-$gray-200: #e5e7eb;
-$gray-300: #d1d5db;
-$gray-400: #9ca3af;
-$gray-500: #6b7280;
-$gray-600: #4b5563;
-$gray-700: #374151;
-$gray-800: #1f2937;
-$gray-900: #282d37;
-
-$border-radius: 4px;
-
-// Espaçamento e Fontes 
-$spacing-xxs: 4px;
-$spacing-xs: 8px;
-$spacing-sm: 12px;
-$spacing-md: 16px;
-$spacing-lg: 20px;
-
-$font-size-xs: 12px;
-$font-size-sm: 14px;
-$font-size-base: 16px;
-
-// ------------------------------------
-// 2. Sidebar Container 
-// ------------------------------------
-
-.sidebar-container {
-  display: flex;
-  flex-direction: column;
-  height: 100vh; 
-  max-height: 100vh;
-  background: $gray-100;
-  color: $gray-700;
-  font-size: $font-size-sm;
-  line-height: 1.5;
-  overflow: hidden; 
-  
-  // Cabeçalho com abas
-  .flex.border-b {
-    display: flex;
-    position: sticky;
-    top: 0;
-    z-index: 10;
-    background: white;
-    border-bottom: 1px solid $gray-200;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    flex-shrink: 0; // Não encolher
-    
-    .tab-btn {
-      flex: 1;
-      padding: $spacing-sm $spacing-xs;
-      border: none;
-      background: transparent;
-      cursor: pointer;
-      font-size: $font-size-sm;
-      color: $gray-500;
-      transition: all 0.2s ease;
-      border-bottom: 3px solid transparent;
-      font-weight: 500;
-      
-      &.active {
-        color: $primary-color;
-        font-weight: 600;
-        border-bottom-color: $primary-color;
-        background: $gray-50;
-      }
-      
-      &:hover:not(.active) {
-        background: $gray-50;
-        color: $gray-700;
-      }
-      
-      &:active {
-        transform: translateY(1px);
-      }
-    }
-  }
-  
-  // CONTEÚDO PRINCIPAL - ÚNICO PONTO DE SCROLL
-  .tab-content-main {
-    flex: 1;
-    overflow-y: auto; // SCROLL APENAS AQUI
-    -webkit-overflow-scrolling: touch; // CRÍTICO para iOS
-    overflow-x: hidden;
-    height: 100%;
-    
-    .tab-pane {
-      display: none;
-      padding: 0;
-      animation: fadeIn 0.25s ease;
-      min-height: 100%; // Garantir altura mínima
-      
-      &.active {
-        display: block;
-      }
-      
-      // REMOVER overflow-y dos panes individuais
-      // O scroll agora é controlado pelo container principal
-    }
-  }
+/* ============= VARIÁVEIS ============= */
+:root {
+ ---primary-color: #0f1115;
+ ---secondary-color: #121417;
+ ---tertiary-color: #161719;
+ 
+ --accent: #4aa3ff;
+ --accent-2: #6bd3ff;
+ --muted: #9aa0a6;
+ --text: #e6eef6;
+ --surface: #101113;
+ --border: rgba(255, 255, 255, 0.06);
+ --glass: rgba(255, 255, 255, 0.02);
+ --radius: 2px;
+ --radius-sm: 8px;
+ --shadow: 0 6px 18px rgba(2, 6, 23, 0.6);
+ --transition: 220ms cubic-bezier(.2, .9, .2, 1);
+ 
+ --text-primary: #cccccc;
+ --text-secondary: #999999;
+ --text-muted: #777777;
+ 
+ --success: #28a745;
+ --danger: #dc3545;
+ --warning: #ffc107;
+ --fotnt-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial
 }
 
-// ------------------------------------
-// 3. Componentes Internos
-// ------------------------------------
-
-// Botões
-.btn {
-  display: block;
-  padding: $spacing-sm $spacing-md;
-  border: none;
-  border-radius: $border-radius;
-  cursor: pointer;
-  font-weight: 500;
-  font-size: $font-size-sm;
-  transition: all 0.2s ease;
-  text-align: center;
-  text-decoration: none;
-  -webkit-tap-highlight-color: transparent; // Melhorar touch no mobile
-  
-  &.primary {
-    background: $primary-color;
-    color: white;
-    
-    &:hover:not(:disabled) {
-      background: darken($primary-color, 10%);
-      transform: translateY(-1px);
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    }
-    
-    &:active:not(:disabled) {
-      transform: translateY(0);
-    }
-  }
+/* ============= MIXINS ============= */
+@mixin scrollbar {
+ &::-webkit-scrollbar {
+  width: 6px;
+ }
  
- &.secondary {
-  background: $secondary-color;
+ &::-webkit-scrollbar-track {
+  background: transparent;
+ }
+ 
+ &::-webkit-scrollbar-thumb {
+  background: #555;
+  border-radius: 3px;
+  
+  &:hover {
+   background: #777;
+  }
+ }
+}
+
+@mixin focus-ring {
+ outline: none;
+ border-color: var(--primary-color) !important;
+ box-shadow: 0 0 0 2px rgba(0, 122, 204, 0.3);
+}
+
+/* ============= LAYOUT PRINCIPAL ============= */
+
+.chat-container {
+ display: flex;
+ flex-direction: column;
+ height: 100%;
+ overflow: hidden;
+}
+
+.chat-top-bar {
+ display: flex;
+ justify-content: space-between;
+ align-items: center;
+ padding: 12px 16px;
+ border-bottom: 1px solid var(--border-color);
+ background: var(--bg-primary);
+ flex-shrink: 0;
+}
+
+.top-left-buttons {
+ display: flex;
+ gap: 6px;
+}
+
+.top-greeting {
+ font-size: 14px;
+ opacity: 0.85;
+ white-space: nowrap;
+ margin: 0 auto;
+ /* Centraliza a saudação */
+ position: absolute;
+ left: 50%;
+ transform: translateX(-50%);
+}
+
+.top-btn.icon {
+ width: 32px;
+ height: 32px;
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ padding: 0;
+}
+
+.top-btn {
+ padding: 6px 12px;
+ background: var(--bg-tertiary);
+ color: var(--text-primary);
+ border: 1px solid var(--border-color);
+ border-radius: 8px;
+ cursor: pointer;
+ font-size: 13px;
+ transition: 0.2s;
+ 
+ &.danger {
+  background: var(--danger);
   color: white;
-  
-  &:hover:not(:disabled) {
-   background: darken($secondary-color, 10%);
-   transform: translateY(-1px);
-  }
-  
-  &:active:not(:disabled) {
-   transform: translateY(0);
-  }
+ }
+ 
+ &:hover {
+  filter: brightness(1.2);
+ }
+}
+
+.chat-input-wrapper.inverted {
+ padding: 14px;
+ background: var(--bg-primary);
+ border-bottom: 1px solid var(--border-color);
+}
+
+#chat-input:focus {
+ transition: all 0.25s ease;
+ transform: translateY(-1px);
+}
+
+.chat-input-wrapper.inverted textarea {
+ width: 100%;
+ background: var(--bg-secondary);
+ border: 1px solid var(--border-color);
+ border-radius: 10px;
+ padding: 10px;
+ resize: none;
+ color: var(--text-primary);
+ min-height: 28px;
+ max-height: 160px;
+ font-size: 14px;
+ 
+ &:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px rgba(0, 122, 204, .25);
+ }
+}
+
+.chat-input-top {
+ display: flex;
+ justify-content: space-between;
+ align-items: center;
+ margin-top: 6px;
+}
+
+#model-indicator {
+ font-size: 12px;
+ color: var(--text-secondary);
+}
+
+.send-btn {
+ background: var(--primary-color);
+ color: white;
+ border: none;
+ padding: 8px 12px;
+ border-radius: 8px;
+ cursor: pointer;
+ transition: .2s;
+ 
+ &:hover {
+  background: var(--primary-hover);
+ }
+}
+
+
+/* ==== ABAS COM INDICADOR ANIMADO ============= */
+.tabs-header {
+ position: relative;
+ display: flex;
+ background: var(--bg-secondary);
+ border-bottom: 1px solid var(--border-color);
+ overflow: hidden;
+ flex-shrink: 0;
+}
+
+.tab-btn {
+ flex: 1;
+ padding: 16px 12px;
+ background: none;
+ border: none;
+ color: var(--text-secondary);
+ font-size: 13.5px;
+ font-weight: 500;
+ cursor: pointer;
+ transition: color 0.2s;
+ position: relative;
+ z-index: 2;
+ 
+ span {
+  position: relative;
+  z-index: 2;
+ }
+ 
+ &.active {
+  color: white;
+ }
+ 
+ &:hover:not(.active) {
+  color: #ddd;
+ }
+}
+
+.tab-indicator {
+ position: absolute;
+ bottom: 0;
+ left: 0;
+ height: 3px;
+ width: 33.333%;
+ background: var(--primary-color);
+ transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+ z-index: 1;
+}
+
+/* ============= CONTEÚDO DAS ABAS ============= */
+.tab-content {
+ flex: 1;
+ display: flex;
+ flex-direction: column;
+ min-height: 0;
+}
+
+.tab-pane {
+ position: absolute;
+ inset: 0;
+ opacity: 0;
+ visibility: hidden;
+ transition: opacity 0.25s ease;
+ display: flex;
+ flex-direction: column;
+ 
+ &.active {
+  opacity: 1;
+  visibility: visible;
+  position: relative;
+ }
+}
+
+/* ========== CHAT – ESTILO CURSOR ============= */
+.chat-container {
+ height: 100%;
+ display: flex;
+ flex-direction: column;
+}
+
+/* Garantir que o container principal tenha altura definida */
+.sidebar-container {
+ height: 100%;
+ display: flex;
+ flex-direction: column;
+}
+
+.sidebar-container .scroll {
+ max-height: 500px;
+ overflow-y: auto;
+}
+
+.message {
+ max-width: 92%;
+ padding: 12px 16px;
+ border-radius: 14px;
+ line-height: 1.5;
+ word-wrap: break-word;
+ animation: fadeInUp 0.3s ease-out;
+ 
+ &.user {
+  align-self: flex-end;
+  background: var(--primary-color);
+  color: white;
+  border-bottom-right-radius: 4px;
+ }
+ 
+ &.assistant {
+  align-self: flex-start;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-color);
+  border-bottom-left-radius: 4px;
+ }
+ 
+ &.system {
+  align-self: center;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 13px;
+  font-style: italic;
+  padding: 8px 0;
+ }
+}
+
+/* scrollbar styling */
+.message::-webkit-scrollbar {
+ width: 10px
+}
+
+.message::-webkit-scrollbar-track {
+ background: transparent
+}
+
+.message::-webkit-scrollbar-thumb {
+ background: linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.03));
+ border-radius: 10px;
+ border: 5px solid transparent;
+ background-clip: padding-box;
+}
+
+/* no topo acima das respostas */
+.chat-input-wrapper {
+ padding: 16px;
+ background: var(--bg-primary);
+ border-top: 1px solid var(--border-color);
+ flex-shrink: 0;
+}
+
+.chat-input-container {
+ display: flex;
+ align-items: flex-end;
+ gap: 12px;
+ background: var(--bg-secondary);
+ border: 1px solid var(--border-color);
+ border-radius: 12px;
+ padding: 10px 12px;
+ transition: all 0.2s ease;
+ 
+ &:focus-within {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px rgba(0, 122, 204, 0.25);
+ }
+}
+
+#chat-input {
+ flex: 1;
+ background: transparent;
+ border: none;
+ outline: none;
+ color: var(--text-primary);
+ font-size: 14px;
+ resize: none;
+ min-height: 24px;
+ max-height: 120px;
+ line-height: 1.5;
+}
+
+.send-btn {
+ background: var(--primary-color);
+ color: white;
+ border: none;
+ width: 38px;
+ height: 38px;
+ border-radius: 10px;
+ cursor: pointer;
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ transition: all 0.2s;
+ flex-shrink: 0;
+ 
+ &:hover {
+  background: var(--primary-hover);
+  transform: scale(1.05);
  }
  
  &:disabled {
   opacity: 0.5;
   cursor: not-allowed;
-  transform: none !important;
- }
- 
- // Tamanhos
- &.py-1 {
-  padding-top: $spacing-xs;
-  padding-bottom: $spacing-xs;
- }
- 
- &.py-2 {
-  padding-top: $spacing-sm;
-  padding-bottom: $spacing-sm;
+  transform: none;
  }
 }
 
-// Campos de formulário
-input,
-select,
-textarea {
+/* ============= TOGGLE SWITCH ============= */
+.toggle-switch {
+ position: relative;
+ display: inline-block;
+ width: 46px;
+ height: 26px;
+ 
+ input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+ }
+ 
+ .slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: #444;
+  transition: 0.3s;
+  border-radius: 4px;
+  
+  &:before {
+   position: absolute;
+   content: "";
+   height: 20px;
+   width: 20px;
+   left: 3px;
+   bottom: 3px;
+   background: white;
+   transition: 0.3s;
+   border-radius: 50%;
+  }
+ }
+ 
+ input:checked+.slider {
+  background: var(--primary-color);
+ }
+ 
+ input:checked+.slider:before {
+  transform: translateX(20px);
+ }
+}
+
+.rule-item {
+ display: flex;
+ align-items: center;
+ justify-content: space-between;
+ padding: 14px 0;
+ border-bottom: 1px solid var(--border-color);
+ 
+ &:last-child {
+  border-bottom: none;
+ }
+ 
+ span {
+  font-size: 13.5px;
+  color: var(--text-primary);
+ }
+}
+
+/* ============= RULES & CONFIG ============= */
+.rules-content,
+.config-content {
+ overflow-y: auto;
+ @include scrollbar;
+ padding: 8px;
+}
+
+.config-section {
+ margin-bottom: 20px;
+}
+
+.config-section label {
+ display: block;
+ margin-bottom: 6px;
+ font-size: 13px;
+ color: var(--text-secondary);
+}
+
+.config-section input,
+.config-section select,
+.config-section textarea {
  width: 100%;
- padding: $spacing-sm;
- border: 1px solid $gray-300;
- border-radius: $border-radius;
- font-size: $font-size-sm;
- background: white;
- transition: all 0.2s ease;
+ padding: 10px 12px;
+ background: var(--bg-secondary);
+ border: 1px solid var(--border-color);
+ border-radius: 8px;
+ color: var(--text-primary);
+ font-size: 13.5px;
  
  &:focus {
-  outline: none;
-  border-color: $primary-color;
-  box-shadow: 0 0 0 3px rgba($primary-color, 0.1);
+  @include focus-ring;
  }
+}
+
+.config-section small {
+ font-size: 11.5px;
+ color: var(--text-muted);
+ display: block;
+ margin-top: 4px;
+}
+
+.config-actions {
+ display: flex;
+ gap: 12px;
+ margin-top: 24px;
+}
+
+/* ============= BOTÕES GERAIS ============= */
+.btn-primary,
+.btn-secondary {
+ padding: 10px 16px;
+ border: none;
+ border-radius: 8px;
+ font-weight: 500;
+ cursor: pointer;
+ transition: all 0.2s;
+ font-size: 13.5px;
+}
+
+.btn-primary {
+ background: var(--primary-color);
+ color: white;
+ flex: 1;
  
- &::placeholder {
-  color: $gray-400;
+ &:hover {
+  background: var(--primary-hover);
  }
 }
 
-// Terminal Output
-.terminal-output {
-  background: $gray-900;
-  color: #10b981;
-  padding: $spacing-md;
-  border-radius: $border-radius;
-  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
-  font-size: $font-size-xs;
-  line-height: 1.4;
-  white-space: pre-wrap;
-  word-break: break-all;
-  max-height: 160px; // Reduzir um pouco para mobile
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
-  
-  // Cores (mantido igual)
-  .text-success { color: $success-color; }
-  .text-yellow-400 { color: #fbbf24; }
-  .text-red-400 { color: $error-color; }
-  .text-blue-400 { color: #60a5fa; }
-  .text-gray-400 { color: $gray-400; }
-  .text-gray-500 { color: $gray-500; }
+.btn-secondary {
+ background: var(--bg-tertiary);
+ color: var(--text-primary);
+ 
+ &:hover {
+  background: #3a3a3d;
+ }
 }
 
-// Status e indicadores
-.text-success {
- color: $success-color;
-}
-
-.text-error {
- color: $error-color;
-}
-
-// ------------------------------------
-// 4. Animações
-// ------------------------------------
-
-@keyframes fadeIn {
+/* ============= ANIMAÇÕES ============= */
+@keyframes fadeInUp {
  from {
   opacity: 0;
-  transform: translateY(5px);
+  transform: translateY(10px);
  }
  
  to {
@@ -249,148 +535,146 @@ textarea {
  }
 }
 
-// ------------------------------------
-// 5. Modo Escuro
-// ------------------------------------
-
-@media (prefers-color-scheme: dark) {
- .sidebar-container {
-  background: $gray-900;
-  color: $gray-200;
-  
-  .flex.border-b {
-   background: $gray-800;
-   border-bottom-color: $gray-700;
-   
-   .tab-btn {
-    color: $gray-400;
-    
-    &.active {
-     color: $primary-color;
-     background: $gray-800;
-    }
-    
-    &:hover:not(.active) {
-     background: $gray-700;
-     color: $gray-200;
-    }
-   }
-  }
-  
-  input,
-  select,
-  textarea {
-   background: $gray-800;
-   border-color: $gray-600;
-   color: $gray-200;
-   
-   &:focus {
-    border-color: $primary-color;
-    box-shadow: 0 0 0 3px rgba($primary-color, 0.2);
-   }
-   
-   &::placeholder {
-    color: $gray-500;
-   }
-  }
-  
-  .terminal-output {
-   background: #0d1117;
-   color: #10b981;
-  }
-  
-  .border {
-   border-color: $gray-600;
-  }
-  
-  .bg-white {
-   background: $gray-800 !important;
-  }
-  
-  .bg-gray-900 {
-   background: $gray-900 !important;
-  }
- }
-}
-
-
-
-// ------------------------------------
-// 7. Utilitários Responsivos
-// ------------------------------------
-
-@media (max-width: 768px) {
- .sidebar-container {
-  .flex.border-b .tab-btn {
-   padding: $spacing-xs $spacing-xxs;
-   font-size: $font-size-xs;
-  }
-  
-  .tab-content .tab-pane .p-2 {
-   padding: $spacing-sm;
-  }
- }
-}
-
-// ------------------------------------
-// 8. Estados de Loading e Disabled
-// ------------------------------------
-
-.loading {
- opacity: 0.7;
- pointer-events: none;
- position: relative;
- 
- &::after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 16px;
-  height: 16px;
-  margin: -8px 0 0 -8px;
-  border: 2px solid transparent;
-  border-top: 2px solid $primary-color;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
- }
-}
-
-@keyframes spin {
- 0% {
-  transform: rotate(0deg);
+/* Responsividade */
+@media (max-width: 480px) {
+ .tab-btn {
+  padding: 14px 8px;
+  font-size: 13px;
  }
  
- 100% {
-  transform: rotate(360deg);
+ .chat-input-container {
+  padding: 8px;
  }
 }
 
-
-// ------------------------------------
-// 9. CORREÇÕES ESPECÍFICAS PARA TOUCH
-// ------------------------------------
-
-// Melhorar performance no scroll touch
-.tab-content-main {
-  transform: translateZ(0); // Acelerar hardware
-  backface-visibility: hidden;
-  perspective: 1000;
+/* Fallback se os temas não carregarem */
+.code-block {
+ background: #1e1e1e;
+ border-radius: 6px;
+ margin: 10px 0;
+ overflow: hidden;
 }
 
-// Prevenir zoom no double-tap (iOS)
-.sidebar-container {
-  touch-action: pan-y; // Só permite scroll vertical
+.code-header {
+ display: flex;
+ justify-content: space-between;
+ align-items: center;
+ padding: 8px 12px;
+ background: #2d2d2d;
+ border-bottom: 1px solid #444;
 }
 
-// Melhorar toque em botões e inputs
-.btn, input, select, textarea {
-  -webkit-tap-highlight-color: transparent;
-  touch-action: manipulation; // Melhor resposta ao toque
+.code-language {
+ font-size: 12px;
+ color: #888;
+ font-weight: 500;
+ font-family: monospace;
 }
 
-// Garantir que conteúdo tenha altura suficiente para scroll
-.tab-pane > div {
-  min-height: calc(100vh - 120px); // Altura mínima baseada na viewport
+pre code {
+ display: block;
+ padding: 12px;
+ overflow-x: auto;
+ font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+ font-size: 13px;
+ line-height: 1.4;
+ color: #f8f8f2;
 }
 
+/* Cores básicas para fallback */
+.hljs-keyword {
+ color: #569cd6;
+}
+
+.hljs-string {
+ color: #ce9178;
+}
+
+.hljs-function {
+ color: #dcdcaa;
+}
+
+.hljs-number {
+ color: #b5cea8;
+}
+
+.hljs-comment {
+ color: #6a9955;
+}
+
+
+// Context Analyzer Styles
+.analyze-btn {
+ background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+ border: none;
+ border-radius: 20px;
+ color: white;
+ padding: 8px 16px;
+ font-size: 12px;
+ cursor: pointer;
+ margin-left: 10px;
+ transition: all 0.3s ease;
+ white-space: nowrap;
+ 
+ &:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+ }
+ 
+ &:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+ }
+}
+
+.chat-input-wrapper {
+ display: flex;
+ align-items: flex-end;
+ gap: 8px;
+ padding: 10px;
+ 
+ textarea {
+  flex: 1;
+  margin-bottom: 0;
+ }
+}
+
+.context-analysis {
+ background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%) !important;
+ border-radius: 12px;
+ padding: 16px;
+ margin: 12px 0;
+ color: white;
+ 
+ .context-info {
+  strong {
+   display: block;
+   margin-bottom: 8px;
+   font-size: 14px;
+  }
+  
+  div {
+   margin: 4px 0;
+   font-size: 13px;
+  }
+  
+  code {
+   background: rgba(255, 255, 255, 0.2);
+   padding: 2px 6px;
+   border-radius: 4px;
+   font-family: monospace;
+  }
+  
+  .context-suggestions {
+   margin-top: 12px;
+   padding-top: 8px;
+   border-top: 1px solid rgba(255, 255, 255, 0.3);
+   
+   small {
+    opacity: 0.9;
+    font-style: italic;
+   }
+  }
+ }
+}
