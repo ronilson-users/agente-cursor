@@ -7,7 +7,7 @@
 :root {
  ---primary-color: #0f1115;
  ---secondary-color: #121417;
- ---tertiary-color: #161719;
+ ---tertiary-color: #3369d5;
  
  --accent: #4aa3ff;
  --accent-2: #6bd3ff;
@@ -56,6 +56,13 @@
  border-color: var(--primary-color) !important;
  box-shadow: 0 0 0 2px rgba(0, 122, 204, 0.3);
 }
+
+
+/* ============= Indicador Pensando ... ============= */
+
+.typing-dots{}
+#typing-indicator{}
+.typing{}
 
 /* ============= LAYOUT PRINCIPAL ============= */
 
@@ -317,12 +324,21 @@
  background-clip: padding-box;
 }
 
-/* no topo acima das respostas */
+
+
 .chat-input-wrapper {
- padding: 16px;
+ 
  background: var(--bg-primary);
  border-top: 1px solid var(--border-color);
- flex-shrink: 0;
+ display: flex;
+ align-items: flex-end;
+ gap: 8px;
+ padding: 10px;
+ 
+ textarea {
+  flex: 1;
+  margin-bottom: 0;
+ }
 }
 
 .chat-input-container {
@@ -444,11 +460,18 @@
 }
 
 /* ============= RULES & CONFIG ============= */
-.rules-content,
+/* .rules-content,
 .config-content {
  overflow-y: auto;
- @include scrollbar;
+@include scrollbar;
  padding: 8px;
+}
+ */
+
+.rules-content,
+.config-content  .scroll {
+ max-height: 500px;
+ overflow-y: auto;
 }
 
 .config-section {
@@ -504,7 +527,7 @@
 }
 
 .btn-primary {
- background: var(--primary-color);
+ background: #565656;
  color: white;
  flex: 1;
  
@@ -550,8 +573,8 @@
 /* Fallback se os temas não carregarem */
 .code-block {
  background: #1e1e1e;
- border-radius: 6px;
- margin: 10px 0;
+ border-radius: 4px;
+ margin: 10px ;
  overflow: hidden;
 }
 
@@ -628,17 +651,7 @@ pre code {
  }
 }
 
-.chat-input-wrapper {
- display: flex;
- align-items: flex-end;
- gap: 8px;
- padding: 10px;
- 
- textarea {
-  flex: 1;
-  margin-bottom: 0;
- }
-}
+
 
 .context-analysis {
  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%) !important;
