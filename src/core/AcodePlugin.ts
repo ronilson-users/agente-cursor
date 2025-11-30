@@ -98,28 +98,40 @@ export class AcodePlugin {
   const settings = this.getSettings();
 
   this.container.innerHTML = `
-      <div class="sidebar-container scroll">
-        <div class="tabs-header">
-          <button class="tab-btn active" data-tab="chat"><span>Chat</span></button>
-          <button class="tab-btn" data-tab="rules"><span>Rules</span></button>
-          <button class="tab-btn" data-tab="config"><span>Config</span></button>
-          <div class="tab-indicator"></div>
-        </div>
-
-        <div class="tab-content">
-          <div class="tab-pane active" id="chat-tab">
-            ${ChatTemplate.render(settings.userName)}
-          </div>
-
-          <div class="tab-pane" id="rules-tab">
-            <div class="rules-content p-5">${RulesTemplate.render(this.ruleManager)}</div>
-          </div>
-
-          <div class="tab-pane" id="config-tab">
-            <div class="config-content p-5">${ConfigTemplate.render(settings)}</div>
-          </div>
-        </div>
-      </div>
+  
+    <div class="sidebar-container">
+     <div class="tabs-header">
+     
+     <button class="tab-btn active" data-tab="chat"><span>Chat</span>
+     </button>
+     
+     <button class="tab-btn" data-tab="rules"><span>Rules</span>
+     </button>
+     
+     
+     <button class="tab-btn" data-tab="config"><span>Config</span>
+     </button>
+     
+     <div class="tab-indicator"></div>
+     </div>
+     
+     <div class="tab-content">
+     <div class="tab-pane active" id="chat-tab">
+     ${ChatTemplate.render(settings.userName)}
+     </div>
+     
+     <div class="tab-pane" id="rules-tab">
+     <div class="rules-content ">${RulesTemplate.render(this.ruleManager)}</div>
+     </div>
+     
+     <div class="tab-pane" id="config-tab">
+     <div class="config-content ">${ConfigTemplate.render(settings)}</div>
+     </div>
+     
+     
+     </div>
+    </div
+    
     `;
 
   this.initializeUIComponents();
@@ -226,9 +238,7 @@ export class AcodePlugin {
 
  private async saveConfig(): Promise<void> {
   const apiKeyEl = this.container?.querySelector('#api-key') as HTMLInputElement;
-  const providerEl = this.container?.querySelector('#api-provider') as HTMLSelectElement;
-  const modelEl = this.container?.querySelector('#api-model') as HTMLSelectElement;
-  const temperatureEl = this.container?.querySelector('#temperature') as HTMLInputElement;
+  const providerEl = this.container?.querySelector('#api-provider') as HTMLSelectElement; const temperatureEl = this.container?.querySelector('#temperature') as HTMLInputElement;
   const userNameEl = this.container?.querySelector('#user-name') as HTMLInputElement;
 
   const settings = this.getSettings();

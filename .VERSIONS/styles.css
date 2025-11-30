@@ -1,72 +1,45 @@
-/* styles/main.css */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
-@import url(https://fonts.googleapis.com/css2?family=Zilla+Slab:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap);
+@import"https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap";
 
+@import"https://fonts.googleapis.com/css2?family=Zilla+Slab:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap";
 
-/* ============================================= */
-/*               MAIN.SCSS – ORGANIZADO          */
-/*  Estilo moderno inspirado em Cursor.sh / Copilot */
-/* ============================================= */
-
-
-/* ============= 1. VARIÁVEIS ============= */
 :root {
- // Cores principais
  --primary-color: #0f1115;
  --secondary-color: #121417;
  --tertiary-color: #3369d5;
- 
- // Acentos
  --accent: #4aa3ff;
  --accent-2: #6bd3ff;
- 
- // Texto
  --text-primary: #e6eef6;
  --text-secondary: #cccccc;
  --text-muted: #999999;
- 
- // Superfícies
  --surface: #101113;
  --bg-primary: var(--primary-color);
  --bg-secondary: var(--secondary-color);
  --bg-tertiary: #1a1d21;
- 
- // Bordas e efeitos
- --border: rgba(255, 255, 255, 0.06);
- --border-color: rgba(255, 255, 255, 0.06);
- --glass: rgba(255, 255, 255, 0.02);
- 
- // Estados
+ --border: rgba(255, 255, 255, .06);
+ --border-color: rgba(255, 255, 255, .06);
+ --glass: rgba(255, 255, 255, .02);
  --success: #28a745;
  --danger: #dc3545;
  --warning: #ffc107;
  --primary-hover: #3369d5;
- 
- // Tipografia & Layout
  --famly-2: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
- 
  --font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
  --radius: 12px;
  --radius-sm: 8px;
- --shadow: 0 6px 18px rgba(2, 6, 23, 0.6);
- --transition: 220ms cubic-bezier(0.2, 0.9, 0.2, 1);
- 
- // VARIÁVEIS da API DO ACODE nao mexer acompanhamo tema
- 
+ --shadow: 0 6px 18px rgba(2, 6, 23, .6);
+ --transition: .22s cubic-bezier(.2, .9, .2, 1);
  --popup-border-radius: 6px;
  --active-color: #61afef;
  --active-text-color: rgb(255, 215, 0);
  --active-icon-color: #4e566660;
  --border-color: #181a1f;
- --box-shadow-color: rgba(0, 0, 0, 0.5);
+ --box-shadow-color: rgba(0, 0, 0, .5);
  --button-active-color: #3865be;
  --button-background-color: #4d78cc;
  --button-text-color: #ffffff;
  --error-text-color: #f44747;
- 
  --primary-text-color: #ffffff;
- 
  --secondary-text-color: #d7dae0;
  --link-text-color: #57b3ff;
  --scrollbar-color: #4e566660;
@@ -76,18 +49,15 @@
  --popup-text-color: #ffffff;
  --popup-active-color: #747d9180;
  --danger-color: rgb(160, 51, 0);
- --danger-text-color: rgb(255, 255, 255);
- 
+ --danger-text-color: rgb(255, 255, 255)
 }
 
-
-/* ============= 2. RESET & BASE ============= */
 *,
-*::before,
-*::after {
+*:before,
+*:after {
  margin: 0;
  padding: 0;
- box-sizing: border-box;
+ box-sizing: border-box
 }
 
 .icon.chatgpt {
@@ -102,62 +72,16 @@
  background-image: url(https://upload.wikimedia.org/wikipedia/commons/0/04/ChatGPT_logo.svg)
 }
 
+@media(max-width:540px) {
 
-/* ============= RESPONSIVO ============= */
-@media (max-width: 540px) {
- .rules-content {
-  margin: 1rem;
-  border-radius: 5px;
- }
- 
- .chat-content {
-  margin: 1rem;
-  border-radius: 5px;
- }
- 
+ .rules-content,
+ .chat-content,
  .config-content {
   margin: 1rem;
-  border-radius: 5px;
- }
- 
-}
-
-/* ============= 3. MIXINS ============= */
-@mixin scrollbar {
- &::-webkit-scrollbar {
-  width: 6px;
- }
- 
- &::-webkit-scrollbar-track {
-  background: transparent;
- }
- 
- &::-webkit-scrollbar-thumb {
-  background: #555;
-  border-radius: 3px;
-  
-  &:hover {
-   background: #777;
-  }
+  border-radius: 5px
  }
 }
 
-@mixin focus-ring {
- outline: none;
- border-color: var(--accent) !important;
- box-shadow: 0 0 0 3px rgba(74, 163, 255, 0.3);
-}
-
-@mixin message-bubble {
- max-width: 92%;
- padding: 6px 8px;
- border-radius: var(--radius);
- line-height: 1.5;
- word-wrap: break-word;
- animation: fadeInUp 0.35s ease-out forwards;
-}
-
-/* Sidebar + Tabs (estilo Cursor) */
 .sidebar-container {
  width: 100%;
  height: 100vh;
@@ -166,27 +90,25 @@
  border-right: 1px solid #30363d;
  display: flex;
  flex-direction: column;
- min-width: 320px;
+ min-width: 320px
 }
 
 .sidebar-container .scroll {
- max-height: 550px;
+ max-height: 600px;
  overflow-y: auto
 }
 
-.chat-top-bar {
- padding: 6px 8px;
+.chat-bar-actions {
  display: flex;
- justify-content: flex-end;
- gap: 8px;
- border-bottom: 1px solid #30363d;
+ justify-content: space-between;
+ align-items: center
 }
 
 .tabs-header {
  position: relative;
  display: flex;
  background: #0d1117;
- border-bottom: 1px solid #30363d;
+ border-bottom: 1px solid #30363d
 }
 
 .tab-btn {
@@ -198,17 +120,23 @@
  font-size: 13px;
  font-weight: 600;
  cursor: pointer;
- transition: color 0.2s;
+ transition: color .2s;
  position: relative;
- z-index: 2;
+ z-index: 2
+}
+.w-full{
+ width: 100%;
+}
+#custom-rules-json{
+ align-items: center;
 }
 
 .tab-btn:hover {
- color: #f0f6fc;
+ color: #f0f6fc
 }
 
 .tab-btn.active {
- color: #58a6ff;
+ color: #58a6ff
 }
 
 .tab-indicator {
@@ -217,16 +145,15 @@
  left: 0;
  height: 2px;
  background: #58a6ff;
- transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
- z-index: 3;
+ transition: transform .25s cubic-bezier(.4, 0, .2, 1);
+ z-index: 3
 }
 
-/* Conteúdo das tabs */
 .tab-content {
  flex: 1;
  display: flex;
  flex-direction: column;
- overflow: hidden;
+ overflow: hidden
 }
 
 .tab-pane {
@@ -234,20 +161,27 @@
  flex-direction: column;
  height: 100%;
  opacity: 0;
- transition: opacity 0.2s;
+ transition: opacity .2s
 }
 
 .tab-pane.active {
  display: flex;
- opacity: 1;
+ opacity: 1
 }
 
-/* Chat Tab */
 .chat-container {
  display: flex;
  flex-direction: column;
  height: 100%;
- background: #0d1117;
+ background: #0d1117
+}
+
+.chat-top-bar {
+ padding: 12px 16px;
+ display: flex;
+ justify-content: flex-end;
+ gap: 8px;
+ border-bottom: 1px solid #30363d
 }
 
 .top-btn {
@@ -258,204 +192,194 @@
  cursor: pointer;
  padding: 6px;
  border-radius: 6px;
- transition: all 0.2s;
+ transition: all .2s
 }
 
 .top-btn:hover {
  background: #30363d;
- color: #f0f6fc;
+ color: #f0f6fc
 }
 
 .top-btn.danger:hover {
  background: #da3633;
- color: white;
+ color: #fff
 }
 
-/* Mensagens */
 .chat-messages {
  flex: 1;
- padding: 5px;
+ padding: 16px;
  overflow-y: auto;
  display: flex;
  flex-direction: column;
- gap: 8px;
+ gap: 12px
 }
 
 .message {
  max-width: 90%;
- padding: 5px 7px;
+ padding: 10px 14px;
  border-radius: 5px;
  line-height: 1.5;
- font-size: 14px;
+ font-size: 14px
 }
 
-/* ============= 6. MENSAGENS ============= */
 .message {
- @include message-bubble;
- 
- &.user {
-  align-self: flex-end;
-  background: var(--tertiary-color);
-  color: white;
-  opacity: 0.5;
-  border-bottom-right-radius: 4px;
- }
- 
- &.assistant {
-  align-self: flex-start;
-  background: var(--bg-tertiary);
-  border: 1px solid var(--border-color);
-  border-bottom-left-radius: 4px;
-  color: var(--text-primary);
- }
- 
- &.system {
-  align-self: center;
-  background: transparent;
-  color: var(--text-muted);
-  font-size: 13px;
-  font-style: italic;
-  padding: 8px 0;
- }
+ max-width: 92%;
+ padding: 12px 16px;
+ border-radius: var(--radius);
+ line-height: 1.5;
+ word-wrap: break-word;
+ animation: fadeInUp .35s ease-out forwards
 }
 
-/* Typing Indicator */
+.message.user {
+ align-self: flex-end;
+ background: var(--tertiary-color);
+ color: #fff;
+ border-bottom-right-radius: 4px
+}
+
+.message.assistant {
+ align-self: flex-start;
+ background: var(--bg-tertiary);
+ border: 1px solid var(--border-color);
+ border-bottom-left-radius: 4px;
+ color: var(--text-primary)
+}
+
+.message.system {
+ align-self: center;
+ background: transparent;
+ color: var(--text-muted);
+ font-size: 13px;
+ font-style: italic;
+ padding: 8px 0
+}
+
 .typing-indicator {
  display: flex;
  align-items: center;
  gap: 6px;
  padding: 10px 16px;
  color: var(--text-muted);
- font-size: 13px;
+ font-size: 13px
 }
 
 .typing-dots {
  display: flex;
- gap: 4px;
+ gap: 4px
 }
 
 .typing-dots span {
- width: 4px;
- height: 4px;
+ width: 8px;
+ height: 8px;
  background: var(--text-muted);
  border-radius: 50%;
- animation: typing 1.4s infinite;
+ animation: typing 1.4s infinite
 }
 
 .typing-dots span:nth-child(1) {
- animation-delay: 0s;
+ animation-delay: 0s
 }
 
 .typing-dots span:nth-child(2) {
- animation-delay: 0.2s;
+ animation-delay: .2s
 }
 
 .typing-dots span:nth-child(3) {
- animation-delay: 0.4s;
+ animation-delay: .4s
 }
 
 @keyframes typing {
- 
+
  0%,
- 100% {
-  transform: translateY(0);
+ to {
+  transform: translateY(0)
  }
  
  50% {
-  transform: translateY(-6px);
+  transform: translateY(-6px)
  }
 }
 
-/* Input area */
 .chat-input-wrapper {
  padding: 12px 16px;
- border-top: 1px solid #30363d;
- background: #161b22;
+ border-top: 1px solid #1364c1;
+ background: #161b22
 }
 
-
-#chat-input {
- margin: 10px 5px;
- width: 95%;
- background: rgba(0, 0, 0, 0.5);
- border: 1px solid #2a83eb !important;
+/* #chat-input {
+ width: 100%;
+ background: #0d1117;
+ border: 1px solid #30363d;
  color: #e6edf3;
- padding: 5px;
- border-radius: 8px;
+ padding: 12px 14px;
+ border-radius: 12px;
  resize: none;
  font-family: inherit;
  font-size: 14px;
  outline: none;
- transition: all 0.2s;
- font-family: 'Fira Code', Menlo, Monaco, Consolas, "Courier New", monospace;
+ transition: all .2s
 }
 
- #chat-input:focus {
- border-color: #ffda3a !important;
- box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.2) !important;
-} 
-
-#chat-input::placeholder{
- color: #545454;
+#chat-input:focus {
+ border-color: #58a6ff;
+ box-shadow: 0 0 0 3px #58a6ff33
 }
-
-
+ */
 .chat-bar-actions {
  display: flex;
- border-top: 1px solid lightcyan;
  justify-content: space-between;
  align-items: center;
  margin-top: 8px;
  font-size: 12px;
- color: #8b949e;
+ color: #8b949e
 }
 
 .button-group {
  display: flex;
- gap: 8px;
+ gap: 8px
 }
 
 .send-btn,
 .analyze-btn {
- background: #5d5d5d;
- color: white;
+ background: #238636;
+ color: #fff;
  border: none;
  width: 36px;
  height: 36px;
- border-radius: 25%;
+ border-radius: 50%;
  cursor: pointer;
  display: flex;
  align-items: center;
  justify-content: center;
  font-size: 18px;
- transition: all 0.2s;
+ transition: all .2s
 }
 
 .send-btn:hover {
- background: #5d5d5d;
- transform: scale(1.05);
+ background: #2ea043;
+ transform: scale(1.05)
 }
 
 .analyze-btn {
  background: transparent;
  color: #58a6ff;
- font-size: 20px;
+ font-size: 20px
 }
 
-/* Rules Tab */
 .rules-content,
 .config-content {
- padding: 5px;
+ padding: 20px;
  overflow-y: auto;
- flex: 1;
+ flex: 1
 }
 
 .rules-status {
  padding: 12px 16px;
- background: rgba(56, 139, 253, 0.15);
- border: 1px solid #58a6ff33;
+ background: #388bfd26;
+ border: 1px solid rgba(88, 166, 255, .2);
  border-radius: 8px;
- font-size: 13px;
+ font-size: 13px
 }
 
 .toggle-rules h4,
@@ -464,7 +388,7 @@
  font-size: 14px;
  margin-bottom: 12px;
  color: #f0f6fc;
- font-weight: 600;
+ font-weight: 600
 }
 
 .rule-item {
@@ -472,33 +396,29 @@
  justify-content: space-between;
  align-items: center;
  padding: 10px 0;
- font-size: 13.5px;
+ font-size: 13.5px
 }
 
-/* Toggle Switch (estilo Cursor) */
 .toggle-switch {
  position: relative;
  display: inline-block;
  width: 44px;
- height: 24px;
+ height: 24px
 }
 
 .toggle-switch input {
  opacity: 0;
  width: 0;
- height: 0;
+ height: 0
 }
 
 .slider {
  position: absolute;
  cursor: pointer;
- top: 0;
- left: 0;
- right: 0;
- bottom: 0;
+ inset: 0;
  background: #30363d;
  transition: .3s;
- border-radius: 34px;
+ border-radius: 34px
 }
 
 .slider:before {
@@ -510,38 +430,36 @@
  bottom: 3px;
  background: #8b949e;
  transition: .3s;
- border-radius: 50%;
+ border-radius: 50%
 }
 
 input:checked+.slider {
- background: #484848;
+ background: #238636
 }
 
 input:checked+.slider:before {
- transform: translateX(20px);
- background: white;
+ transform: translate(20px);
+ background: #fff
 }
 
-/* Custom Rules */
 #custom-rules-json {
  background: #0d1117;
  border: 1px solid #30363d;
  color: #e6edf3;
  border-radius: 8px;
- font-family: 'JetBrains Mono', monospace;
- font-size: 13px;
+ font-family: JetBrains Mono, monospace;
+ font-size: 13px
 }
 
-/* Config Tab */
 .config-section {
- margin-bottom: 16px;
+ margin-bottom: 16px
 }
 
 .config-section label {
  display: block;
  font-size: 13px;
  margin-bottom: 6px;
- color: #f0f6fc;
+ color: #f0f6fc
 }
 
 .config-input,
@@ -553,21 +471,21 @@ input:checked+.slider:before {
  color: #e6edf3;
  padding: 10px 12px;
  border-radius: 8px;
- font-size: 14px;
+ font-size: 14px
 }
 
 .config-input:focus,
 .config-select:focus {
  outline: none;
  border-color: #58a6ff;
- box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.2);
+ box-shadow: 0 0 0 3px #58a6ff33
 }
 
 .config-slider {
  -webkit-appearance: none;
  height: 6px;
  border-radius: 3px;
- background: #54d2a4;
+ background: #30363d
 }
 
 .config-slider::-webkit-slider-thumb {
@@ -576,93 +494,90 @@ input:checked+.slider:before {
  height: 18px;
  border-radius: 50%;
  background: #58a6ff;
- cursor: pointer;
+ cursor: pointer
 }
 
 .btn-sm,
-.btn-secundary,
 .btn-primary {
  padding: 6px 12px;
  font-size: 12px;
  border-radius: 6px;
  cursor: pointer;
- font-weight: 500;
+ font-weight: 500
 }
 
 .btn-sm {
  background: #30363d;
  color: #e6edf3;
- border: none;
+ border: none
 }
 
 .btn-primary {
  background: #238636;
- color: white;
+ color: #fff;
  border: none;
  padding: 10px 16px;
  width: 100%;
- margin-top: 8px;
+ margin-top: 8px
 }
 
 .btn-primary:hover {
- background: #2ea043;
+ background: #2ea043
 }
 
-/* Responsividade total (mobile-first) */
-@media (max-width: 768px) {
+@media(max-width:768px) {
  .sidebar-container {
   max-width: 100%;
   width: 100%;
-  min-width: unset;
+  min-width: unset
  }
  
- .chat-top-bar {
-  padding: 3px;
- }
- 
- .chat-bar-actions {
-  padding: 3px;
- }
- 
+ .chat-top-bar,
  .chat-input-wrapper {
-  padding: 3px;
+  padding: 10px
  }
  
  .rules-content,
  .config-content {
-  padding: 3px;
+  padding: 16px
  }
 }
 
-/* Scrollbars estilo Cursor */
 .scroll::-webkit-scrollbar {
- width: 1px;
+ width: 8px
 }
 
 .scroll::-webkit-scrollbar-track {
- background: transparent;
+ background: transparent
 }
 
 .scroll::-webkit-scrollbar-thumb {
- background: transparent;
- border-radius: 2px;
+ background: #30363d;
+ border-radius: 4px
 }
 
 .scroll::-webkit-scrollbar-thumb:hover {
- background: #484f58;
+ background: #484f58
 }
 
-.w-full {
- width: 100%;
+textarea {
+ resize: vertical;
+ font-family: Fira Code, Menlo, Monaco, Consolas, Courier New, monospace;
+ background: #1a202c;
+ color: #e2e8f0;
+ border: 1px solid #4a5568;
+ border-radius: 8px
 }
 
+textarea::placeholder {
+ color: #718096
+}
 
-/* ===== 9. CODE BLOCKS (Fallback) ============= */
 .code-block {
  background: #1e1e1e;
- border-radius: 4px;
+ border-radius: 8px;
  margin: 12px 0;
- overflow: hidden;
+ overflow: hidden
 }
 
 .code-header {
@@ -671,92 +586,203 @@ input:checked+.slider:before {
  border-bottom: 1px solid #444;
  display: flex;
  justify-content: space-between;
- align-items: center;
+ align-items: center
 }
 
 .code-language {
  font-size: 12px;
  color: #888;
- font-family: monospace;
+ font-family: monospace
 }
 
 pre code {
  display: block;
  padding: 16px;
  overflow-x: auto;
- font-family: 'Menlo', 'Monaco', 'Consolas', monospace;
+ font-family: Menlo, Monaco, Consolas, monospace;
  font-size: 13px;
  line-height: 1.5;
- color: #f8f8f2;
+ color: #f8f8f2
 }
 
-/* ============= 10. CONTEXT ANALYZER ============= */
 .analyze-btn {
- background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+ background: linear-gradient(135deg, #667eea, #764ba2);
  border: none;
  border-radius: 8px;
- color: white;
+ color: #fff;
  padding: 8px 12px;
  font-size: 13px;
  cursor: pointer;
- transition: all 0.3s;
- 
- &:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(102, 126, 234, 0.4);
- }
+ transition: all .3s
 }
 
-.context-analysis {
- background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+.analyze-btn:hover {
+ transform: translateY(-2px);
+ box-shadow: 0 6px 16px #667eea66
+}
+
+.message.context-analysis {
+ background: linear-gradient(135deg, #f093fb, #f5576c);
  border-radius: 12px;
  padding: 16px;
  margin: 12px 0;
- color: #000;
- 
- strong {
-  display: block;
-  margin-bottom: 8px;
-  font-size: 14px;
- }
- 
- code {
-  background: rgba(255, 255, 255, 0.25);
-  padding: 2px 6px;
-  border-radius: 4px;
- }
+ color: #000
 }
 
-/* ============= 11. ANIMAÇÕES ============= */
+.message.context-analysis strong {
+ display: block;
+ margin-bottom: 8px;
+ font-size: 14px
+}
+
+.message.context-analysis code {
+ background: #ffffff40;
+ padding: 2px 6px;
+ border-radius: 4px
+}
+
 @keyframes fadeInUp {
- from {
+ 0% {
   opacity: 0;
-  transform: translateY(12px);
+  transform: translateY(12px)
  }
  
  to {
   opacity: 1;
-  transform: translateY(0);
+  transform: translateY(0)
  }
 }
 
-/* ============= 12. RESPONSIVIDADE ============= */
-@media (max-width: 480px) {
+@media(max-width:480px) {
  .chat-top-bar {
-  padding: 10px 12px;
+  padding: 10px 12px
  }
  
  .tab-btn {
   padding: 14px 8px;
-  font-size: 13px;
+  font-size: 13px
  }
  
  .chat-input-container {
-  padding: 8px;
+  padding: 8px
  }
  
  .send-btn {
   width: 36px;
-  height: 36px;
+  height: 36px
  }
+}
+
+pre code.hljs {
+ display: block;
+ overflow-x: auto;
+ padding: 1em
+}
+
+code.hljs {
+ padding: 3px 5px
+}
+
+/*!
+  Theme: GitHub Dark
+  Description: Dark theme as seen on github.com
+  Author: github.com
+  Maintainer: @Hirse
+  Updated: 2021-05-15
+
+  Outdated base version: https://github.com/primer/github-syntax-dark
+  Current colors taken from GitHub's CSS
+*/
+
+
+.hljs {
+ color: #c9d1d9;
+ background: #0d1117
+}
+
+.hljs-doctag,
+.hljs-keyword,
+.hljs-meta .hljs-keyword,
+.hljs-template-tag,
+.hljs-template-variable,
+.hljs-type,
+.hljs-variable.language_ {
+ color: #ff7b72
+}
+
+.hljs-title,
+.hljs-title.class_,
+.hljs-title.class_.inherited__,
+.hljs-title.function_ {
+ color: #d2a8ff
+}
+
+.hljs-attr,
+.hljs-attribute,
+.hljs-literal,
+.hljs-meta,
+.hljs-number,
+.hljs-operator,
+.hljs-selector-attr,
+.hljs-selector-class,
+.hljs-selector-id,
+.hljs-variable {
+ color: #79c0ff
+}
+
+.hljs-meta .hljs-string,
+.hljs-regexp,
+.hljs-string {
+ color: #a5d6ff
+}
+
+.hljs-built_in,
+.hljs-symbol {
+ color: #ffa657
+}
+
+.hljs-code,
+.hljs-comment,
+.hljs-formula {
+ color: #8b949e
+}
+
+.hljs-name,
+.hljs-quote,
+.hljs-selector-pseudo,
+.hljs-selector-tag {
+ color: #7ee787
+}
+
+.hljs-subst {
+ color: #c9d1d9
+}
+
+.hljs-section {
+ color: #1f6feb;
+ font-weight: 700
+}
+
+.hljs-bullet {
+ color: #f2cc60
+}
+
+.hljs-emphasis {
+ color: #c9d1d9;
+ font-style: italic
+}
+
+.hljs-strong {
+ color: #c9d1d9;
+ font-weight: 700
+}
+
+.hljs-addition {
+ color: #aff5b4;
+ background-color: #033a16
+}
+
+.hljs-deletion {
+ color: #ffdcd7;
+ background-color: #67060c
 }
