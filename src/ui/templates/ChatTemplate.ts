@@ -4,18 +4,34 @@ export class ChatTemplate {
   static render(userName: string): string {
     return `
       <div class="chat-container">
-        <div class="chat-top-bar">
-          <button id="clear-chat" class="top-btn danger icon delete"></button>
-          <button id="history-chat" class="top-btn icon tune"> </button>
-        </div>
+      
+      <div class="chat-top-bar">
+      
+        <button id="clear-chat" class="top-btn danger icon delete">
+        </button>
+        <button id="history-chat" class="top-btn icon tune"> 
+        </button>
+        
+      </div>
 
-        <div class="chat-input-wrapper inverted">
-          <textarea id="chat-input" placeholder="Digite sua mensagem..." rows="1"></textarea>
-          <div class="chat-input-top">
-            <span id="model-indicator">Modelo: </span>
-            <button id="send-message" class="send-btn icon send" title="Enviar"></button>
-          </div>
-        </div>
+      <div class="chat-input-wrapper">
+       
+       <textarea id="chat-input" placeholder="Digite sua mensagem..." rows="4">
+       </textarea>
+       
+      <div class="chat-bar-actions">
+      
+    <div id="model-indicator">Modelo: gpt-4</div>
+     <div class="button-group">
+         
+    <button id="send-message" class="send-btn icon send" title="Enviar">
+    </button>
+         
+         
+     </div>
+       </div>
+       
+      </div>
 
         <div id="chat-messages" class="chat-messages scroll">
           <div class="message system">
