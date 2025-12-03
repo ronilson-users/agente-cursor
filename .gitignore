@@ -19,3 +19,7 @@ __pycache__/
 # Sistema
 .DS_Store
 Thumbs.db
+
+# production
+dist.zip
+dist/main.js

@@ -1,38 +1,45 @@
 {
-  "name": "acode-plugin_IA-AGENT",
-  "version": "1.0.0",
-  "description": "Template for Acode plugin",
-  "main": "src/main.ts",
-  "repository": "https://github.com/Acode-Foundation/acode-plugin.git",
-  "author": "Acode Foundation",
-  "license": "MIT",
-  "scripts": {
-    "dev": "node esbuild.config.mjs --watch",
-    "serve": "node esbuild.config.mjs --serve",
-    "build": "node esbuild.config.mjs",
-    "commit": "cz"
+ "name": "Acode Plugin Propelling IA",
+ "version": "1.0.0",
+ "description": "Template for Acode plugin",
+ "main": "src/main.ts",
+ "repository": "https://github.com/Acode-Foundation/acode-plugin.git",
+ "author": "Acode Foundation",
+ "license": "MIT",
+ "scripts": {
+  "dev": "node esbuild.config.mjs --watch",
+  "serve": "node esbuild.config.mjs --serve",
+  "build": "node esbuild.config.mjs",
+  "commit": "cz"
+ },
+ "dependencies": {
+  "@types/ace": "^0.0.50",
+  "copy-to-clipboard": "^3.3.3",
+  "dompurify": "^2.4.0",
+  "highlight.js": "^11.10.0",
+  "html-tag-js": "^1.5.1",
+  "jsdom": "^27.2.0",
+  "markdown-it": "^13.0.2",
+  "openai": "^4.0.0",
+  "uuid": "^9.0.1",
+  "zod": "^3.22.0"
+ },
+ "devDependencies": {
+  "commitizen": "^4.3.1",
+  "cz-customizable": "^7.5.1",
+  "esbuild": "^0.25.2",
+  "esbuild-sass-plugin": "^3.3.1",
+  "jszip": "^3.10.1",
+  "prettier": "3.0.0",
+  "sass": "^1.93.3"
+ },
+ "browserslist": "cover 100%,not android < 5",
+ "config": {
+  "commitizen": {
+   "path": "./node_modules/cz-customizable"
   },
-  "dependencies": {
-    "@types/ace": "^0.0.50",
-    "html-tag-js": "^1.1.41",
-    "typescript": "^5.9.3"
-  },
-  "devDependencies": {
-    "commitizen": "^4.3.1",
-    "cz-customizable": "^7.5.1",
-    "esbuild": "^0.25.2",
-    "esbuild-sass-plugin": "^3.3.1",
-    "jszip": "^3.10.1",
-    "prettier": "3.0.0",
-    "sass": "^1.93.3"
-  },
-  "browserslist": "cover 100%,not android < 5",
-  "config": {
-    "commitizen": {
-      "path": "./node_modules/cz-customizable"
-    },
-    "cz-customizable": {
-      "config": "cz-config.js"
-    }
+  "cz-customizable": {
+   "config": "cz-config.js"
   }
+ }
 }

@@ -1,45 +1,46 @@
-// AIServices.ts
 /**
  * Serviço unificado de IA para o plugin do Acode
  * Suporta múltiplos provedores (OpenAI, Gemini, DeepSeek)
- * Inclui suporte a streaming para respostas em tempo real
  */
 
-export type AIProvider = "openai" | "gemini" | "deepseek";
+export type AIProvider = "openai" | "gemini" | "deepseek" | "claude";
+
+export interface AIServiceConfig {
+  apiKey: string;
+  provider: AIProvider;
+  model: string;
+  temperature?: number;
+}
 
 export class AIService {
-  private apiKey: string;
-  private provider: AIProvider;
-  private model: string;
+  private config: AIServiceConfig;
   private apiUrl: string;
 
-  constructor(apiKey: string, provider: AIProvider = "openai") {
-    this.apiKey = apiKey;
-    this.provider = provider;
-    this.model = this.getDefaultModel();
+  constructor(config: AIServiceConfig) {
+    this.config = config;
     this.apiUrl = this.getApiUrl();
-  }
-
-  /** Define o modelo padrão de acordo com o provedor */
-  private getDefaultModel(): string {
-    switch (this.provider) {
-      case "gemini":
-        return "gemini-1.5-flash";
-      case "deepseek":
-        return "deepseek-chat";
-      default:
-        return "gpt-4o-mini";
-    }
   }
 
   /** Define a URL da API conforme o provedor */
   private getApiUrl(): string {
-    switch (this.provider) {
+    const { provider, model } = this.config;
+    
+    switch (provider) {
       case "gemini":
-        return `https://generativelanguage.googleapis.com/v1beta/models/${this.model}:generateContent?key=${this.apiKey}`;
+        return `
+        
+       
+        https://generativelanguage.googleapis.com/v1beta/models/${model}/key=${apiKey}
+        
+        
+        
+        
+        `;
       case "deepseek":
         return "https://api.deepseek.com/v1/chat/completions";
-      default:
+      case "claude":
+        return "https://api.anthropic.com/v1/messages";
+      default: // openai
         return "https://api.openai.com/v1/chat/completions";
     }
   }
@@ -48,16 +49,32 @@ export class AIService {
    * Envia uma mensagem e retorna a resposta completa
    */
   async sendMessage(prompt: string): Promise<string> {
-    if (!this.apiKey) throw new Error("Chave de API não configurada.");
-    if (!prompt) throw new Error("Mensagem vazia.");
+    const { apiKey, provider } = this.config;
+    
+    if (!apiKey?.trim()) {
+      throw new Error("Chave de API não configurada.");
+    }
+    
+    if (!prompt?.trim()) {
+      throw new Error("Mensagem vazia.");
+    }
 
-    switch (this.provider) {
-      case "gemini":
-        return this.sendGemini(prompt);
-      case "deepseek":
-      case "openai":
-      default:
-        return this.sendOpenAI(prompt);
+    console.log(`Enviando mensagem para ${provider}...`);
+
+    try {
+      switch (provider) {
+        case "gemini":
+          return await this.sendGemini(prompt);
+        case "claude":
+          return await this.sendClaude(prompt);
+        case "deepseek":
+        case "openai":
+        default:
+          return await this.sendOpenAI(prompt);
+      }
+    } catch (error) {
+      console.error(`Erro no AIService (${provider}):`, error);
+      throw error;
     }
   }
 
@@ -65,45 +82,65 @@ export class AIService {
    * Implementação para OpenAI e DeepSeek (ChatCompletion)
    */
   private async sendOpenAI(prompt: string): Promise<string> {
+    const { apiKey, model, temperature = 0.7 } = this.config;
+    
     const body = {
-      model: this.model,
+      model: model,
       messages: [
-        { role: "system", content: "Você é um assistente de programação útil e conciso." },
+        { 
+          role: "system", 
+          content: "Você é um assistente de programação útil e conciso. Responda em português." 
+        },
         { role: "user", content: prompt }
-      ]
+      ],
+      temperature: temperature,
+      max_tokens: 4000
     };
+
+    console.log(`Enviando para OpenAI/DeepSeek - Modelo: ${model}`);
 
     const response = await fetch(this.apiUrl, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${this.apiKey}`
+        "Authorization": `Bearer ${apiKey}`
       },
       body: JSON.stringify(body)
     });
 
     if (!response.ok) {
-      const errText = await response.text();
-      throw new Error(`Erro ${response.status}: ${errText}`);
+      const errorText = await response.text();
+      console.error(`Erro ${response.status}:`, errorText);
+      throw new Error(`Erro ${response.status}: ${this.extractErrorMessage(errorText)}`);
     }
 
     const data = await response.json();
-    return data.choices?.[0]?.message?.content?.trim() || "Sem resposta.";
+    return data.choices?.[0]?.message?.content?.trim() || "Sem resposta da API.";
   }
 
   /**
-   * Implementação para Google Gemini (API diferente)
+   * Implementação para Google Gemini
    */
   private async sendGemini(prompt: string): Promise<string> {
+    const { apiKey, model, temperature = 0.7 } = this.config;
+    
     const body = {
       contents: [
         {
           parts: [{ text: prompt }]
         }
-      ]
+      ],
+      generationConfig: {
+        temperature: temperature,
+        maxOutputTokens: 4000
+      }
     };
 
-    const response = await fetch(this.apiUrl, {
+    const url = `${this.apiUrl}?key=${apiKey}`;
+    
+    console.log(`Enviando para Gemini - Modelo: ${model}`);
+
+    const response = await fetch(url, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -112,72 +149,85 @@ export class AIService {
     });
 
     if (!response.ok) {
-      const errText = await response.text();
-      throw new Error(`Erro ${response.status}: ${errText}`);
+      const errorText = await response.text();
+      console.error(`Erro ${response.status}:`, errorText);
+      throw new Error(`Erro ${response.status}: ${this.extractErrorMessage(errorText)}`);
     }
 
     const data = await response.json();
     const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
-    return text || "Sem resposta do Gemini.";
+    
+    if (!text) {
+      console.error("Resposta vazia do Gemini:", data);
+      throw new Error("Resposta vazia do Gemini");
+    }
+    
+    return text;
   }
 
   /**
-   * Envia uma mensagem com streaming (OpenAI / DeepSeek)
-   * Chama `onToken` a cada fragmento recebido.
+   * Implementação para Claude (Anthropic)
    */
-  async sendMessageStream(prompt: string, onToken: (token: string) => void): Promise<void> {
-    if (this.provider === "gemini") {
-      const text = await this.sendGemini(prompt);
-      onToken(text);
-      return;
-    }
-
+  private async sendClaude(prompt: string): Promise<string> {
+    const { apiKey, model, temperature = 0.7 } = this.config;
+    
     const body = {
-      model: this.model,
+      model: model,
+      max_tokens: 4000,
+      temperature: temperature,
       messages: [
-        { role: "system", content: "Você é um assistente de programação útil e conciso." },
-        { role: "user", content: prompt }
-      ],
-      stream: true
+        { 
+          role: "user", 
+          content: prompt 
+        }
+      ]
     };
+
+    console.log(`Enviando para Claude - Modelo: ${model}`);
 
     const response = await fetch(this.apiUrl, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${this.apiKey}`
+        "x-api-key": apiKey,
+        "anthropic-version": "2023-06-01"
       },
       body: JSON.stringify(body)
     });
 
-    if (!response.ok || !response.body) {
-      throw new Error(`Erro ${response.status}: ${response.statusText}`);
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error(`Erro ${response.status}:`, errorText);
+      throw new Error(`Erro ${response.status}: ${this.extractErrorMessage(errorText)}`);
     }
 
-    const reader = response.body.getReader();
-    const decoder = new TextDecoder("utf-8");
+    const data = await response.json();
+    return data.content?.[0]?.text?.trim() || "Sem resposta do Claude.";
+  }
 
-    while (true) {
-      const { value, done } = await reader.read();
-      if (done) break;
+  /**
+   * Extrai mensagem de erro da resposta da API
+   */
+  private extractErrorMessage(errorText: string): string {
+    try {
+      const errorData = JSON.parse(errorText);
+      return errorData.error?.message || errorData.error || errorText;
+    } catch {
+      return errorText;
+    }
+  }
 
-      const chunk = decoder.decode(value);
-      const lines = chunk.split("\n").filter(line => line.trim() !== "");
-
-      for (const line of lines) {
-        if (line.startsWith("data: ")) {
-          const data = line.replace(/^data: /, "");
-          if (data === "[DONE]") return;
-
-          try {
-            const json = JSON.parse(data);
-            const token = json.choices?.[0]?.delta?.content;
-            if (token) onToken(token);
-          } catch {
-            // ignora linhas inválidas
-          }
-        }
-      }
+  /**
+   * Testa a conexão com a API
+   */
+  async testConnection(): Promise<boolean> {
+    try {
+      const testPrompt = "Responda apenas com 'OK' se estiver funcionando.";
+      const response = await this.sendMessage(testPrompt);
+      return response.includes("OK");
+    } catch (error) {
+      console.error("Teste de conexão falhou:", error);
+      return false;
     }
   }
 }

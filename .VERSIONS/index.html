@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+        <title>Document</title>
+        <link rel="stylesheet" href="styles.css" type="text/css" media="all" />
+    </head>
+    
+    <style type="text/css" media="all">
+    .container{
+     padding: 5px;
+     background: #282828;
+    }
+     
+    </style>
+
+    <body>
+        <div class="container">
+         
+            <div class="chat-container">
+                <div class="chat-top-bar">
+                    <button
+                        id="clear-chat"
+                        class="chat-top-btn danger icon delete"
+                    ></button>
+
+                    <button
+                        id="history-chat"
+                        class="chat-top-btn icon tune"
+                    ></button>
+                </div>
+
+                <div class="chat-input-wrapper">
+                    <textarea
+                        id="chat-input"
+                        placeholder="Digite sua mensagem..."
+                        rows="4"
+                    ></textarea>
+
+                    <div class="chat-bar-actions">
+                        <!--deixar dinamico modelo-->
+                        <div id="model-indicator">Modelo: gpt-4</div>
+                        <div class="button-group">
+                            <button
+                                id="send-message"
+                                class="send-btn icon send"
+                                title="Enviar"
+                            ></button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="chat-messages" class="chat-messages scroll">
+                    <div class="message system">
+                        <p>
+                            ${this.userProfile(userName)}Como posso ajudar você
+                            hoje?
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </body>
+</html>

@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Cards Coloridos</title>
+  
+  <style type="text/css" media="all">
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      background-color: #282828;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      padding: 20px;
+    }
+    
+    .container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 60px;
+      max-width: 1200px;
+    }
+    
+    .container .card {
+      position: relative;
+      background-color: var(--clr);
+      border-radius: 20px;
+      border-top-left-radius: 70px;
+      overflow: hidden;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      width: 300px;
+      height: 400px;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    }
+    
+    .container .card:hover {
+      transform: translateY(-15px);
+      box-shadow: 0 20px 30px rgba(0, 0, 0, 0.4);
+    }
+    
+    .container .card .box {
+      position: absolute;
+      inset: 10px;
+      background: #282828;
+      border-radius: 10px;
+      display: flex;
+      flex-direction: column;
+      padding: 20px;
+      color: white;
+    }
+    
+    .container .card .box .icon {
+      position: absolute;
+      width: 140px;
+      height: 140px;
+      background-color: var(--clr);
+      top: 0;
+      left: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-bottom-right-radius: 50%;
+      transition: all 0.5s ease;
+      z-index: 1;
+    }
+    
+    .container .card:hover .box .icon {
+      width: 100%;
+      border-radius: 0;
+      border-bottom-right-radius: 50%;
+    }
+    
+    .container .card .box .icon::before {
+      content: '';
+      position: absolute;
+      bottom: -30px;
+      left: 0;
+      width: 30px;
+      height: 30px;
+      background: transparent;
+      border-top-left-radius: 60%;
+      box-shadow: -5px -5px 0 5px var(--clr);
+    }
+    
+    .container .card .box .icon::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: -30px;
+      width: 30px;
+      height: 30px;
+      background: transparent;
+      border-top-left-radius: 60%;
+      box-shadow: -5px -5px 0 5px var(--clr);
+    }
+    
+    .container .card .box .icon .iconBox {
+      position: absolute;
+      inset: 10px;
+      background: #282828;
+      border-radius: 50%;
+      border-top-right-radius: 5px;
+      border-bottom-left-radius: 5px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 2.5em;
+      transition: all 0.3s ease;
+    }
+    
+    .container .card:hover .box .icon .iconBox {
+      transform: scale(0.9);
+      background-color: rgba(40, 40, 40, 0.9);
+    }
+    
+    .container .card .box .content {
+      margin-top: 150px;
+      z-index: 2;
+      position: relative;
+    }
+    
+    .container .card .box .content h3 {
+      font-size: 1.5em;
+      margin-bottom: 15px;
+      color: var(--clr);
+      font-weight: 600;
+    }
+    
+    .container .card .box .content p {
+      font-size: 1em;
+      line-height: 1.5;
+      color: #e0e0e0;
+      margin-bottom: 20px;
+    }
+    
+    .container .card .box .content a {
+      display: inline-block;
+      margin-top: 10px;
+      padding: 10px 20px;
+      background-color: var(--clr);
+      color: #282828;
+      text-decoration: none;
+      border-radius: 5px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      text-align: center;
+    }
+    
+    .container .card .box .content a:hover {
+      background-color: rgba(255, 255, 255, 0.9);
+      transform: translateY(-3px);
+      box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+    }
+    
+    Responsividade
+    @media (max-width: 1100px) {
+      .container {
+        gap: 40px;
+      }
+      
+      .container .card {
+        width: 280px;
+        height: 380px;
+      }
+    }
+    
+    @media (max-width: 900px) {
+      .container {
+        gap: 30px;
+      }
+      
+      .container .card {
+        width: 250px;
+        height: 360px;
+      }
+    }
+    
+    @media (max-width: 768px) {
+      .container {
+        flex-direction: column;
+        gap: 40px;
+      }
+      
+      .container .card {
+        width: 320px;
+        height: 400px;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .container .card {
+        width: 100%;
+        max-width: 320px;
+        height: 380px;
+      }
+      
+      .container .card .box {
+        padding: 15px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  
+  <div class="container">
+    <div class="card" style="--clr:#249eff;">
+      <div class="box">
+        <div class="icon">
+          <div class="iconBox">💡</div>
+        </div>
+        <div class="content">
+          <h3>Inovação</h3>
+          <p>Descubra novas formas de pensar e criar soluções inovadoras para os desafios do mundo moderno.</p>
+          <a href="#">Saiba Mais</a>
+        </div>
+      </div>
+    </div>
+    
+    <div class="card" style="--clr:#ff1f6b;">
+      <div class="box">
+        <div class="icon">
+          <div class="iconBox">❤️</div>
+        </div>
+        <div class="content">
+          <h3>Paixão</h3>
+          <p>Encontre sua paixão e transforme-a em propósito. O que move você também pode mover o mundo.</p>
+          <a href="#">Saiba Mais</a>
+        </div>
+      </div>
+    </div>
+    
+    <div class="card" style="--clr:#a7fa2f;">
+      <div class="box">
+        <div class="icon">
+          <div class="iconBox">🌱</div>
+        </div>
+        <div class="content">
+          <h3>Sustentabilidade</h3>
+          <p>Explore formas de viver em harmonia com o planeta e construir um futuro mais verde para todos.</p>
+          <a href="#">Saiba Mais</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+</body>
+
+</html>
