@@ -102,35 +102,47 @@ export class AcodePlugin {
     <div class="sidebar-container">
      <div class="tabs-header">
      
-     <button class="tab-btn active" data-tab="chat"><span>Chat</span>
+     <!---- TAB SYTEM ----!>
+     
+    <button class="tab-btn active" data-tab="chat">
+    <span>Chat</span>
+    </button>
+     
+     <button class="tab-btn" data-tab="rules">
+     <span>Rules</span>
      </button>
      
-     <button class="tab-btn" data-tab="rules"><span>Rules</span>
+     
+     <button class="tab-btn" data-tab="config">
+     <span>Config</span>
      </button>
      
-     
-     <button class="tab-btn" data-tab="config"><span>Config</span>
-     </button>
-     
+       <!---- TAB SYTEM INDICATOR ----!>
      <div class="tab-indicator"></div>
      </div>
      
-     <div class="tab-content">
+       <!---- CONTEUDO CHAT AGENTE ----!>
+       
      <div class="tab-pane active" id="chat-tab">
-     ${ChatTemplate.render(settings.userName)}
+     <div class="chat-content">
+        ${ChatTemplate.render(settings.userName)}
+      </div>
      </div>
      
      <div class="tab-pane" id="rules-tab">
-     <div class="rules-content ">${RulesTemplate.render(this.ruleManager)}</div>
+     <div class="rules-content ">
+         ${RulesTemplate.render(this.ruleManager)}</div>
      </div>
      
      <div class="tab-pane" id="config-tab">
-     <div class="config-content ">${ConfigTemplate.render(settings)}</div>
+     <div class="config-content ">
+         ${ConfigTemplate.render(settings)}
+     </div>
      </div>
      
      
      </div>
-    </div
+    
     
     `;
 
@@ -236,35 +248,74 @@ export class AcodePlugin {
   }
  }
 
+ 
  private async saveConfig(): Promise<void> {
+  console.log('🔄 saveConfig chamado');
+  
+  // 1. Pegar elementos DOM
   const apiKeyEl = this.container?.querySelector('#api-key') as HTMLInputElement;
-  const providerEl = this.container?.querySelector('#api-provider') as HTMLSelectElement; const temperatureEl = this.container?.querySelector('#temperature') as HTMLInputElement;
+  const providerEl = this.container?.querySelector('#api-provider') as HTMLSelectElement;
+  const modelEl = this.container?.querySelector('#api-model') as HTMLSelectElement;
+  const tempSlider = this.container?.querySelector('#temperature') as HTMLInputElement;
   const userNameEl = this.container?.querySelector('#user-name') as HTMLInputElement;
 
-  const settings = this.getSettings();
+  // 2. Logar valores para debug
+  console.log('🔑 API Key input value:', apiKeyEl?.value || 'vazio');
+  console.log('🏷️ Provider:', providerEl?.value);
+  console.log('🤖 Model:', modelEl?.value);
+  console.log('🌡️ Temperature:', tempSlider?.value);
 
-  if (!apiKeyEl || !providerEl || !modelEl || !temperatureEl) {
-   toast('Campos de configuração incompletos');
-   return;
+  // 3. Validar que encontrou os elementos
+  if (!apiKeyEl || !providerEl || !modelEl || !tempSlider) {
+    console.error('❌ Elementos DOM não encontrados');
+    const toast = acode.require('toast');
+    toast('Campos de configuração incompletos');
+    return;
   }
 
-  // atualiza apiKey somente se o usuário digitou uma nova
+  const settings = this.getSettings();
+  console.log('📁 Settings antes:', settings);
+
+  // 4. Atualizar apenas se houver nova chave
   const newKey = apiKeyEl.value.trim();
   if (newKey !== "") {
-   settings.apiKey = await this.cryptoUtils.encrypt(newKey);
+    console.log('🔐 Criptografando nova chave...');
+    try {
+      settings.apiKey = await this.cryptoUtils.encrypt(newKey);
+      console.log('✅ Chave criptografada e salva');
+    } catch (error) {
+      console.error('❌ Erro ao criptografar:', error);
+    }
+  } else {
+    console.log('⚠️ API Key vazia, mantendo anterior');
   }
 
+  // 5. Atualizar outros campos
   settings.provider = providerEl.value;
   settings.model = modelEl.value;
-  settings.temperature = parseFloat(temperatureEl.value);
+  settings.temperature = parseFloat(tempSlider.value);
   settings.userName = userNameEl?.value || settings.userName;
 
-  appSettings.update();
-  toast('Configurações salvas!');
+  console.log('📁 Settings depois:', settings);
 
-  const modelIndicator = this.container?.querySelector('#model-indicator') as HTMLElement;
-  if (modelIndicator) modelIndicator.textContent = `Modelo: ${settings.model}`;
- }
+  // 6. Salvar
+  try {
+    appSettings.update();
+    console.log('💾 Configurações salvas no appSettings');
+    
+    const toast = acode.require('toast');
+    toast('Configurações salvas!');
+
+    // 7. Atualizar indicador de modelo
+    const modelIndicator = this.container?.querySelector('#model-indicator') as HTMLElement;
+    if (modelIndicator) {
+      modelIndicator.textContent = `Modelo: ${settings.model}`;
+      console.log('🔄 Model indicator atualizado');
+    }
+  } catch (error) {
+    console.error('❌ Erro ao salvar configurações:', error);
+  }
+}
 
  private testAPI(): void {
   toast('Testando conexão com API...');

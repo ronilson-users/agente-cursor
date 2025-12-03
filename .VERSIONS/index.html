@@ -1,10 +1,25 @@
-import { DOMUtils } from '../../utils/DOMUtils';
-
-export class ChatTemplate {
-  static render(userName: string): string {
-    return `
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+        <title>Document</title>
+        <link rel="stylesheet" href="styles.css" type="text/css" media="all" />
+    </head>
     
-     <div class="chat-container">
+    <style type="text/css" media="all">
+    .container{
+     padding: 5px;
+     background: #282828;
+    }
+     
+    </style>
+
+    <body>
+        <div class="container">
+         
+            <div class="chat-container">
                 <div class="chat-top-bar">
                     <button
                         id="clear-chat"
@@ -25,13 +40,8 @@ export class ChatTemplate {
                     ></textarea>
 
                     <div class="chat-bar-actions">
-                    
-
-                        
-                        <div id="model-indicator"></div>
-
-                        
-                        
+                        <!--deixar dinamico modelo-->
+                        <div id="model-indicator">Modelo: gpt-4</div>
                         <div class="button-group">
                             <button
                                 id="send-message"
@@ -51,23 +61,7 @@ export class ChatTemplate {
                     </div>
                 </div>
             </div>
-
-    `;
-  }
-
-  private static userProfile(userName: string): string {
-    return userName ? `Olá, ${DOMUtils.escapeHtml(userName)}! ` : 'Olá! ';
-  }
-
-  static getTypingIndicator(): string {
-    return `
-      <div class="message assistant typing-indicator" id="typing-indicator">
-        <div class="typing-dots">
-          <span></span>
-          <span></span>
-          <span></span>
+            
         </div>
-      </div>
-    `;
-  }
-}
+    </body>
+</html>

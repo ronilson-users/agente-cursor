@@ -43,9 +43,9 @@ export class RuleManager {
     this.loadSavedRules();
   }
 
-  // ==================================================
+  // =============================================
   // 🔄 Carrega regras salvas no appSettings ao iniciar
-  // ==================================================
+  // =============================================
   private loadSavedRules() {
     const settings = appSettings.value[plugin.id];
     if (!settings || !settings.rules) return;
@@ -56,9 +56,9 @@ export class RuleManager {
     this.customRules = saved.customRules || this.customRules;
   }
 
-  // ==================================================
+  // ===========================================
   // 💾 Salva regras no appSettings
-  // ==================================================
+  // ============================================
   private save() {
     const settings = appSettings.value[plugin.id];
     if (!settings) return;
@@ -72,25 +72,25 @@ export class RuleManager {
     appSettings.update();
   }
 
-  // =================================================
+  // ===========================================
   // 🔧 Atualiza regras de toggle (checkbox)
-  // =================================================
+  // ==========================================
   public setToggleRule(key: string, value: boolean) {
     this.toggleRules[key] = value;
     this.save();
   }
 
-  // =================================================
+  // ==========================================
   // 🔧 Atualiza regras personalizadas (JSON)
-  // =================================================
+  // ===========================================
   public setCustomRules(obj: RuleSet) {
     this.customRules = obj;
     this.save();
   }
 
-  // =====================================================
+  // ============================================
   // 📤 Retorna TODAS as regras combinadas
-  // =====================================================
+  // ============================================
   public getRules(): RuleSet {
     return {
       ...this.defaultRules,
@@ -99,9 +99,9 @@ export class RuleManager {
     };
   }
 
-  // ==================================================
+  // ==========================================
   // 📄 Gera o texto final para enviar no prompt da IA
-  // ==================================================
+  // =========================================
   public getRulesAsText(): string {
     const rules = this.getRules();
 

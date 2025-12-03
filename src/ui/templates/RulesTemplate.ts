@@ -14,6 +14,7 @@ export class RulesTemplate {
       optimizePerformance: "Otimizar Performance",
       autoDetectLanguage: "Detectar Idioma Automaticamente"
     }).map(([key, label]) => `
+    
         <div class="rule-item">
           <span>${label}</span>
           <label class="toggle-switch">
@@ -21,6 +22,7 @@ export class RulesTemplate {
             <span class="slider"></span>
           </label>
         </div>
+        
       `).join('');
 
     return `

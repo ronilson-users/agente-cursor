@@ -4,17 +4,26 @@ import { PluginSettings } from '../../types';
 export class ConfigTemplate {
   static render(settings: PluginSettings): string {
     return `
-      <div class="p-2">
-        <h3 class="font-bold mb-2">Configurações de API</h3>
+    
+    <div class="config-container scroll">
+      <div class="sections">
+        <h3 class="config-title">Configurações de API</h3>
 
         <div class="config-section">
-          <label for="user-name" class="block mb-1">Como gosta de ser chamado:</label>
+        
+          <label for="user-name" class="block ">Como gosta de ser chamado:
+          </label>
+          
           <input type="text" id="user-name" placeholder="Seu nome ou apelido..." value="${DOMUtils.escapeHtml(settings.userName || '')}" class="config-input">
-          <small class="text-muted">Este nome será usado nas saudações</small>
+          
+          <small class="text-muted">Este nome será usado nas saudações
+          </small>
         </div>
 
-        <div class="config-section mt-3">
-          <label for="api-provider" class="block mb-1">Provedor:</label>
+        <div class="config-section ">
+        
+          <label for="api-provider" class="block ">Provedor:
+          </label>
           <select id="api-provider" class="config-select">
             <option value="openai" ${settings.provider === 'openai' ? 'selected' : ''}>OpenAI</option>
             <option value="gemini" ${settings.provider === 'gemini' ? 'selected' : ''}>Gemini</option>
@@ -43,15 +52,21 @@ export class ConfigTemplate {
           </select>
         </div>
 
-        <div class="config-section mt-3">
-          <label for="temperature" class="block mb-1">Temperatura: <span id="temp-value">${settings.temperature || 0.7}</span></label>
+        <div class="config-section ">
+          <label for="temperature" class="block ">Temperatura: <span id="temp-value">${settings.temperature || 0.7}</span></label>
+          
           <input type="range" id="temperature" min="0" max="1" step="0.1" value="${settings.temperature || 0.7}" class="config-slider">
         </div>
 
-        <div class="config-actions mt-4">
-          <button id="test-api" class="btn-secondary">Testar API</button>
-          <button id="save-config" class="btn-primary">Salvar</button>
+        <div class="config-actions ">
+          <button id="test-api" class="btn-secondary">Testar API
+          </button>
+          
+          <button id="save-config" class="btn-primary">Salvar
+          
+          </button>
         </div>
+      </div>
       </div>
     `;
   }
